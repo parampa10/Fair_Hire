@@ -1,0 +1,17 @@
+<p>Here is a complaint page.</p>
+<form action="complaint" method="post" class="w-100 p-5">
+    {% csrf_token %}
+    <h1 class="text-light mb-4"><b>Enter the Details</b></h1>        
+    <input type="text" name="firstname" placeholder="firstname" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="lastname" placeholder="lastname" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="mobile" placeholder="mobile" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="email" placeholder="email" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="type_of_disability" placeholder="type_of_disability" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="description" placeholder="description" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="company" placeholder="company" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="city" placeholder="city" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="state" placeholder="state" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="pincode" placeholder="pincode" class="w-100 my-3 text-light py-2"><br>        
+    <input type="text" name="date" placeholder="date" class="w-100 my-3 text-light py-2"><br>        
+    <input type="submit"  value="Login" class="w-50 my-3 py-2">
+  </form>

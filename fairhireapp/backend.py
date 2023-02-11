@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
- 
+  
 def home(request): 
     if request.method == 'GET':
         message = "WELCOME TO HOMEPAGE"
@@ -493,7 +493,7 @@ def complaint(request):
 #                 return JsonResponse(message, safe=False)
 
         
-
+ 
 # # converts orders string from database to list to append new orders 
 # def Convert(string):
 #     li = list(string.split(","))
@@ -510,7 +510,7 @@ def complaint(request):
 #     }
 
 
-   
+
 #     decorations = list(Decoration.objects.all().values())
 #     caps = list(Caps.objects.all().values())
 #     shapes = list(Shape.objects.all().values())

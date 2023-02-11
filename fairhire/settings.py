@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fairhireapp',
-    'django_crontab',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

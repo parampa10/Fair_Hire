@@ -15,6 +15,16 @@ def home(request):
         message = "WELCOME TO HOMEPAGE"
         return render(request,"home.html",{ "message" : message })
 
+def laws(request): 
+    if request.method == 'GET':
+        message = "WELCOME TO HOMEPAGE"
+        return render(request,"laws.html",{ "message" : message })
+
+def about(request): 
+    if request.method == 'GET':
+        message = "WELCOME TO HOMEPAGE"
+        return render(request,"about.html",{ "message" : message })
+
 def complaint(request): 
     if request.method == 'GET':
         message = "WELCOME TO HOMEPAGE"

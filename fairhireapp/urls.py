@@ -1,13 +1,15 @@
 from django.urls import path,include
 
 from . import views
-from fairhireapp.backend import complaint, home
+from fairhireapp.backend import complaint, home, about, laws
 # from product_analysis.apidata import complaint, home,login, signup, customize, save, toedit, edit, show_files,data,show_product, show_all_product, delete, getCardData, formSave
 
 urlpatterns = [
 
     path('',home),
-    path('complaint',complaint)
+    path('complaint',complaint),
+    path('about',about),
+    path('laws',laws)
     # path('login',login),
     # path('signup',signup),
     # path('customize/<str:userid>',customize, name="customize"),

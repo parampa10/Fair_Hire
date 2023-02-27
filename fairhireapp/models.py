@@ -3,6 +3,7 @@ from django.db import models
 class User(models.Model):
     userid = models.CharField(primary_key = True, max_length=100)
     email = models.EmailField(null=True)
+    role = models.CharField( max_length=100)
     password = models.CharField(max_length=100)
 
     def __str__(self):
@@ -22,7 +23,7 @@ class Complaints(models.Model):
     state = models.CharField(null=True,max_length=100)
     pincode = models.CharField(null=True,max_length=100)
     date = models.CharField(max_length=100 , null=True)
-   
+
 
 
 

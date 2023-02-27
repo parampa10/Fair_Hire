@@ -1,7 +1,13 @@
 from django.db import models
 
+class User(models.Model):
+    userid = models.CharField(primary_key = True, max_length=100)
+    email = models.EmailField(null=True)
+    password = models.CharField(max_length=100)
 
-
+    def __str__(self):
+        return str(self.userid)
+    
 
 class Complaints(models.Model):
     id = models.AutoField(primary_key=True)

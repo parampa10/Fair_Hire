@@ -1,4 +1,271 @@
 @charset "UTF-8";
+/* Login Page CSS */
+
+
+/* Tag level css */
+* {
+  font-family: 'Poppins';
+}
+
+body {
+  margin: 0 !important;
+  overflow-x: hidden;
+}
+
+input[type="text"],input[type="password"] {
+  background: none;
+  border: none;
+  border-bottom: solid 1px #fff;
+  outline: none;
+}
+
+input[type="submit"] {
+  background: #fff;
+  border: none;
+  border-radius: 48px;
+  font-weight: 700;
+}
+
+input::placeholder {
+  color: #fff;
+  opacity: 0.7;
+}
+	
+.form-select {
+  width: 15vw;
+  font-size: 1vw;
+}
+
+.form-select:focus {
+  box-shadow: none;
+}
+
+.form-select option {
+  font-size: 1vw;
+}
+
+/* Common class css */
+.bg-blue {
+  background: #2E3191;
+}
+
+.color-blue {
+  color: #2E3191;
+}
+.color-gray {
+  color: #7D7D7D
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.shadow-down {
+  box-shadow: 0px 4px 11px -1px rgba(0, 0, 0, 0.14);
+}
+
+.custom_scroll::-webkit-scrollbar {
+  width: 0.2vw;
+}
+
+.custom_scroll::-webkit-scrollbar-thumb {
+  background: #aaa; 
+}
+
+/* Specific css */
+/* User css */
+
+.user_btn_view {
+  font-size: 1vw;
+  padding: 0.3vw 2.2vw;
+  border: solid 0.05vw #2E3191;
+  border-radius: 100vw;
+}
+
+.user_list_work {
+  height: 18vw;
+  padding-top: 1.2vw;
+}
+
+.comparison_title {
+  /* padding: 1.2vw 0; */
+  height: 4vw;
+  border-bottom: solid 1px #A8A8A880;
+  display: flex;
+  align-items: center;
+  font-size: 1.2vw;
+}
+
+/* .comparison_item {
+  width: 100%;
+  background: #f7f7f7;
+  padding: 2vw;
+}
+
+.comparison_item_sub { */
+  /* padding: 1.1vw 0; */
+  /* height: 4vw;
+  border-bottom: solid 1px #A8A8A880;
+  font-size: 0.9vw;
+  font-weight: 500;
+} */
+
+.comparison_item {
+  width: 50%;
+  background: #f7f7f7;
+  padding: 2vw;
+  display: none;
+}
+
+.comparison_item_sub {
+  /* padding: 1.1vw 0; */
+  height: 4vw;
+  border-bottom: solid 1px #A8A8A880;
+  font-size: 0.9vw;
+  font-weight: 500;
+}
+
+.compare_table{
+  display: none;
+}
+
+.btn_blue {
+  width: 20vw;
+  margin: 0 0 4vw 4vw;
+  padding: 1vw 0;
+  border-radius: 100vw;
+  font-size: 1vw;
+}
+
+/* Graph css */
+.y_title {
+  font-size: 1.2vw;
+  transform: rotate(270deg);
+  white-space: nowrap;
+}
+
+.graph_cont {
+  box-shadow: 8px 8px 50px rgba(0, 0, 0, 0.05);
+  height: 33vw;
+  background: #fff;
+  padding: 1vw 0.5vw 1vw 5vw;
+}
+
+.y_scale {
+  color: #0008;
+  font-weight: 500;
+  font-size: 1vw;
+  line-height: 3vw;
+  margin-bottom: 3vw;
+}
+
+.x_scale {
+  color: #0008;
+  font-weight: 500;
+  font-size: 1vw;
+  height: 3vw;
+}
+
+.graph_main {
+  /* background: #5555; */
+  height: 24vw;
+  position: relative;
+  margin: 1vw 0;
+  padding-top: 0.6vw;
+  /* background: url("/static/image/graph_grid.png") center; */
+  /* background-size: 100% 10px; */
+}
+
+.graph_point {
+  width: 0.8vw;
+  height: 0.8vw;
+  border-radius: 100vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: #000;
+  cursor: pointer;
+  z-index: 98;
+}
+
+.graph_point_text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: 1vw;
+  font-weight: 500;
+  z-index: 99;
+}
+
+.graph_point_tooltip {
+  background: #fff;
+  box-shadow: 0px 4px 10px 0px #0000000D;
+  padding: 0.5vw;
+  height: 10vw;
+  width: 20vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  overflow-y: auto;
+
+}
+
+.graph_point_tooltip::-webkit-scrollbar {
+  width: 0.4vw;
+ }
+ 
+ .graph_point_tooltip::-webkit-scrollbar-thumb {
+  background: #aaa;
+  border-radius: 100vw;
+ }
+ 
+#popup2 input[type="text"] {
+  background: none;
+  border: none;
+  border-bottom: solid 1px #000;
+  outline: none;
+}
+
+#popup2 input[type="text"]::placeholder {
+  color:#000;
+  opacity: 0.8;
+}
+
+
+input#filename{
+  font-size: 1.1vw;
+  height: 3vw;
+}
+
+/*my analysis page*/
+.user_btn_view a{
+  text-decoration: none;
+  color: #2E3191;
+}
+.comparision_decoration {
+  min-height: 11vw;
+  align-items: start !important;
+  padding-top: 1vw;
+}
+
+
+
+
+
+
+
+/* Login Page CSS */
+
+
+
+
+
+
 /*!
 * Start Bootstrap - Freelancer v7.0.6 (https://startbootstrap.com/theme/freelancer)
 * Copyright 2013-2022 Start Bootstrap

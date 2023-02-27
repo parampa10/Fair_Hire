@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 # from product_analysis.models import Caps, Decoration, Material, Shape, platforms, user, files, Formats
-from fairhireapp.models import Complaints
+from fairhireapp.models import Complaints, User
 from django.db.models import Q
 from django.shortcuts import redirect
 import json
@@ -9,7 +9,38 @@ from rest_framework.decorators import api_view
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
-  
+
+def login(request):
+
+    message = ""
+    
+    if request.method == 'POST':
+        criterion1 = Q(userid =  request.POST["userid"]) #any query you want
+        criterion2 = Q(password=request.POST["password"]) #any query you want
+        isalready = User.objects.filter(criterion1 & criterion2 ).values()
+        values = list(isalready)
+    
+        if(len(values)==0):
+            message = "This user is not registered"
+            return JsonResponse(message, safe=False)
+        else:
+            message = "login successful"
+            
+            
+            context  = {
+                "test" : "Success",
+                "userid": request.POST["userid"],
+                
+            }
+        
+            
+            return render(request,"dashboard.html",{"context": context})
+
+           
+        
+    if request.method == 'GET':
+        return render(request,"login.html",{ "message" : message })
+    
 def home(request): 
     if request.method == 'GET':
         message = "WELCOME TO HOMEPAGE"

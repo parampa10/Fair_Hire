@@ -45,12 +45,18 @@ input::placeholder {
 }
 
 /* Common class css */
-.bg-blue {
-  background: #2E3191;
+.bg-teal {
+  background: #1abc9c;
+}
+.bg-gray {
+  background: #2c3e50;
 }
 
 .color-blue {
   color: #2E3191;
+}
+.color-teal {
+  color: #1abc9c;
 }
 .color-gray {
   color: #7D7D7D

@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 # from product_analysis.models import Caps, Decoration, Material, Shape, platforms, user, files, Formats
-from fairhireapp.models import Complaints, User
+from fairhireapp.models import Complaints, User, User_Logged
 from django.db.models import Q
 from django.shortcuts import redirect
 import json
@@ -10,11 +10,18 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
 
+def logout(request):
+    print(request.session['userid'])
+    criterion1 = Q(userid=request.session['userid']) #any query you want
+    User_Logged.objects.filter(criterion1).delete()
+    return render(request,"login.html")
+
 def login(request):
 
     message = ""
-    
+    print("Hello")
     if request.method == 'POST':
+        print("Hello")
         criterion1 = Q(userid =  request.POST["userid"]) #any query you want
         criterion2 = Q(password=request.POST["password"]) #any query you want
         isalready = User.objects.filter(criterion1 & criterion2 ).values()
@@ -22,39 +29,116 @@ def login(request):
     
         if(len(values)==0):
             message = "This user is not registered"
+            print("Hello")
             return JsonResponse(message, safe=False)
         else:
             message = "login successful"
             
             
+
+            request.session['userid'] = request.POST["userid"]
+            request.session['user_logged_in'] = "True"
+            request.session['loggedin_user'] = "User"
+            
+            
             context  = {
                 "test" : "Success",
-                "userid": request.POST["userid"],
-                
+                "user_logged_in": "True",
+                "userid": request.POST["userid"]
+
             }
         
             
-            return render(request,"dashboard.html",{"context": context})
+            return render(request,"home.html",{"context": context})
+        
+    if request.method == 'GET':
+        
+        if 'user_logged_in' in request.session:
+            if (request.session['user_logged_in'] == "True"): 
+                pass
+            else: 
+                return render(request,"login.html",{ "message" : message })
+        else: 
+            return render(request,"login.html",{ "message" : message })
+        
+def registeruser(request):
+
+    message = ""
+    
+    if request.method == 'POST':
+        criterion1 = Q(userid =  request.POST["email"]) #any query you want
+        isalready = User.objects.filter(criterion1).values()
+        values = list(isalready)
+        if(len(values)==0):
+
+            data_to_add = User(
+            userid = request.POST["email"],
+            password = request.POST["password"],
+            role = "user",
+            email = request.POST["email"],
+
+            )
+
+            data_to_add.save()
+        
+            
+            return render(request,"login.html",{"context": "Registration Successful"})
+            
+        else:
+            message = "This user is already registered"
+            return JsonResponse(message, safe=False)
 
            
         
     if request.method == 'GET':
-        return render(request,"login.html",{ "message" : message })
+        return render(request,"registeruser.html",{ "message" : message })
     
 def home(request): 
     if request.method == 'GET':
-        message = "WELCOME TO HOMEPAGE"
-        return render(request,"home.html",{ "message" : message })
+        # print(request.session['userid'])
+        if 'user_logged_in' in request.session:
+            context  = {
+                    "user_logged_in": request.session['user_logged_in'],
+                    "userid": request.session['userid']
+
+            }
+            return render(request,"home.html",{ "context" : context })
+        else:
+
+            message = "WELCOME TO HOMEPAGE"
+            return render(request,"home.html",{ "message" : message })
 
 def laws(request): 
     if request.method == 'GET':
-        message = "WELCOME TO HOMEPAGE"
-        return render(request,"laws.html",{ "message" : message })
+
+        if 'user_logged_in' in request.session:
+            context  = {
+                    "user_logged_in": request.session['user_logged_in'],
+                    "userid": request.session['userid']
+
+            }
+            return render(request,"laws.html",{ "context" : context })
+        else:
+
+            message = "WELCOME TO HOMEPAGE"
+            return render(request,"laws.html",{ "message" : message })
+       
 
 def about(request): 
     if request.method == 'GET':
-        message = "WELCOME TO HOMEPAGE"
-        return render(request,"about.html",{ "message" : message })
+        if 'user_logged_in' in request.session:
+            context  = {
+                    "user_logged_in": request.session['user_logged_in'],
+                    "userid": request.session['userid']
+
+            }
+            return render(request,"about.html",{ "context" : context })
+        else:
+
+            message = "WELCOME TO HOMEPAGE"
+            return render(request,"about.html",{ "message" : message })
+        
+        
 
 def complaint(request): 
     if request.method == 'GET':

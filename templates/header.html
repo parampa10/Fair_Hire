@@ -44,14 +44,29 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded "
                             href="/" id="home">Home</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                            href="/complaint" id="complaint">Complaint</a></li>
+                            {% if context.user_logged_in == "True" %}  
+                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                href="/complaint" id="complaint">Complaint</a></li>
+                      
+                      {% endif %}
+                            
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="laws" id="laws">Laws &
                             Regulations</a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="about" id="about">About</a>
                     </li>
+                    {% if context.user_logged_in != "True" %}  
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="login" id="laws">Login</a></li>
 
+              
+              {% endif %}
+              
+
+              {% if context.user_logged_in == "True" %}  
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="logout" id="laws">Logout</a></li>
+
+              
+              {% endif %}
+                    
                 </ul>
             </div>
         </div>

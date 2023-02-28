@@ -9,6 +9,12 @@ class User(models.Model):
     def __str__(self):
         return str(self.userid)
     
+class User_Logged(models.Model):
+    userid = models.CharField(primary_key = True, max_length=100)
+
+    def __str__(self):
+        return str(self.userid)
+    
 
 class Complaints(models.Model):
     id = models.AutoField(primary_key=True)

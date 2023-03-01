@@ -1,7 +1,7 @@
 from django.urls import path,include
 
 from . import views
-from fairhireapp.backend import login,complaint, home, about, laws, registeruser, logout
+from fairhireapp.backend import login,complaint, home, about, laws, registeruser, logout, new_complaint
 # from product_analysis.apidata import complaint, home,login, signup, customize, save, toedit, edit, show_files,data,show_product, show_all_product, delete, getCardData, formSave
 
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     path('',home),
     path('login',login),
     path('complaint',complaint),
+    path('new_complaint',new_complaint),
     path('about',about),
     path('laws',laws),
     path('registeruser',registeruser),

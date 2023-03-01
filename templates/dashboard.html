@@ -11,9 +11,10 @@
 </head>
 
 <body>
+    {% include "header.html" %}
     <!-- =============== Navigation ================ -->
     <div class="container">
-        <div class="navigation">
+        <div class="navigation" style="background-color: #1abc9c;">
             <ul>
                 <li>
                     <a href="#">
@@ -159,117 +160,53 @@
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Recent Complaints</h2>
-                        <a href="#" class="btn">View All</a>
+                        <h2>Complaints</h2>
+                        
                     </div>
 
                     <table>
-                        <thead>
-                            <tr>
+                        <thead style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
+                            <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+                              <td style=" width: 8%; font-size: 20px;">Index</td>  
+                              <td style=" width: 23%; font-size: 20px;">Company</td>
+                                <td style=" width: 23%; font-size: 20px;">Interviewee</td>
+                                <td style=" width: 23%; font-size: 20px;">Discrimination Type</td>
+                                <td style="text-align:end; width: 23%; font-size: 20px;">Status</td>
                                 
-                                <td style="text-align:center; width: 25%;">Company</td>
-                                <td style="text-align:center; width: 25%;">Interviewee</td>
-                                <td style="text-align:center; width: 25%;">Type of discrimination</td>
-                                <td style="text-align:center; width: 25%;">Status</td>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <tr style="text-align:center; width: 100%;">
-                                <td style="text-align:center; width: 25%;">Star Industries</td>
-                                <td style="text-align:center; width: 25%;">Ted Smith</td>
-                                <td style="text-align:center; width: 25%;">Disability Discrimination</td>
-                                <td style="text-align:center; width: 25%;"><span class="status delivered">Resolved</span></td>
+                            {% for j in context.complaints %}
+                        
+                       
+                            <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+                              <td style=" width: 8%;"> {{ forloop.counter }}</td>
+                                <td style=" width: 23%;">{{j.company}}</td>
+                                <td style=" width: 23%;">{{j.firstname}}</td>
+                                <td style=" width: 23%;">{{j.type_of_disability}}</td>
+                                <td>
+                                    <select name="" id="">
+                                        <option value="Pending">Pending</option>
+                                        <option value="Solved">Solved</option>
+                                        <option value="In Process">In Process</option>
+                                        
+                                    </select>
+                                </td>
+                                <!-- <td style="text-align:end; width: 23%;"><span class="">Pending</span></td> -->
                             </tr>
+                            {% endfor %}
 
                             
                         </tbody>
                     </table>
                 </div>
 
-                <!-- ================= New Customers ================ -->
-                <!-- <div class="recentCustomers">
-                    <div class="cardHeader">
-                        <h2>Recent Interviewees</h2>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Ted <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Sam <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Smith <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amanda <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Jon <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Samir <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Cloey <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Richie <br> <span>India</span></h4>
-                            </td>
-                        </tr>
                     </table>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div> 
 
     <!-- =========== Scripts =========  -->
     

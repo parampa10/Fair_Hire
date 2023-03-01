@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>Freelancer - Start Bootstrap Theme</title>
+  <title></title>
   <!-- Favicon-->
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <!-- Font Awesome icons (free version)-->
@@ -23,7 +23,6 @@
 <body id="page-top">
   <!-- Navigation-->
   {% include "header.html" %}
-  
   <!-- Masthead-->
 
   <!-- About Section-->
@@ -32,10 +31,16 @@
   <section class="page-section"  style="margin-top: 100px;">
     <div class="container">
       <!-- Contact Section Heading-->
-     
+      <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Register Here</h2>
+      <!-- Icon Divider-->
+      <div class="divider-custom">
+        <div class="divider-custom-line"></div>
+        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+        <div class="divider-custom-line"></div>
+      </div>
       <!-- Contact Section Form-->
       <div class="row justify-content-center">
-        <div class="">
+        <div class="col-lg-8 col-xl-7">
           <!-- * * * * * * * * * * * * * * *-->
           <!-- * * SB Forms Contact Form * *-->
           <!-- * * * * * * * * * * * * * * *-->
@@ -43,45 +48,24 @@
           <!-- To make this form functional, sign up at-->
           <!-- https://startbootstrap.com/solution/contact-forms-->
           <!-- to get an API token!-->
-                <div class="cardHeader" style="display: flex; width: 100%; justify-content: space-between; margin-bottom: 50px;">
-                    <h2>Recent Complaints</h2>
-                    <a href="new_complaint" class="btn">Add New</a>
-                </div>
-
-                <table style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-                    <thead style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
-                        <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-                          <td style=" width: 8%; font-size: 23px;">Index</td>  
-                          <td style=" width: 23%; font-size: 25px;">Company</td>
-                            <td style=" width: 23%; font-size: 25px;">Interviewee</td>
-                            <td style=" width: 23%; font-size: 25px;">Type of discrimination</td>
-                            <td style="text-align:end; width: 23%; font-size: 25px;">Status</td>
-                            
-                        </tr>
-                    </thead>
-
-                    <tbody style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-
-                      {% for j in context.complaints %}
-                        
-                       
-                      <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-                        <td style=" width: 8%;"> {{ forloop.counter }}</td>
-                          <td style=" width: 23%;">{{j.company}}</td>
-                          <td style=" width: 23%;">{{j.firstname}}</td>
-                          <td style=" width: 23%;">{{j.type_of_disability}}</td>
-                          <td style="text-align:end; width: 23%;"><span class="">Pending</span></td>
-                      </tr>
-                      {% endfor %}
-                        
-                    </tbody>
-                </table>
+          <form  action="registeruser" method="post">
+            <!-- Name input-->
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+              <input class="form-control" id="Email" name="email" type="text" placeholder="Enter your Email..." />
+              <label for="Email">Email</label>
+              <!-- <div class="invalid-feedback" data-sb-feedback="name:required">Firstname is required.</div> -->
             </div>
 
-            
+            <div class="form-floating mb-3">
+              <input class="form-control" id="password" name="password" type="text" placeholder="Enter password..."
+              />
+              <label for="password">Password</label>
+              <!-- <div class="invalid-feedback" data-sb-feedback="lastname:required">Lastname is required.</div> -->
+            </div>
 
-          
-          
+            <button class="btn btn-primary btn-xl" id="submitButton" type="submit" >Register</button>
+          </form>
         </div>
       </div>
     </div>

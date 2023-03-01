@@ -12,11 +12,14 @@ import os
 
 def logout(request):
     print(request.session['userid'])
-    criterion1 = Q(userid=request.session['userid']) #any query you want
-    User_Logged.objects.filter(criterion1).delete()
+    request.session['userid'] = ""
+    request.session['user_logged_in'] = ""
+    
     return render(request,"login.html")
 
 def login(request):
+
+    # return render(request,"dashboard.html")
 
     message = ""
     print("Hello")
@@ -33,23 +36,38 @@ def login(request):
             return JsonResponse(message, safe=False)
         else:
             message = "login successful"
-            
-            
-
             request.session['userid'] = request.POST["userid"]
             request.session['user_logged_in'] = "True"
-            request.session['loggedin_user'] = "User"
             
-            
-            context  = {
+            if(values[0]["role"] == "Admin"):
+                request.session['loggedin_user'] = "Admin"
+                
+                isalready = Complaints.objects.filter().values()
+                values = list(isalready)
+                
+                
+                context  = {
                 "test" : "Success",
                 "user_logged_in": "True",
-                "userid": request.POST["userid"]
-
-            }
-        
+                "userid": request.POST["userid"],
+                "complaints":values
+                }
             
-            return render(request,"home.html",{"context": context})
+                
+                return render(request,"dashboard.html",{"context": context})
+
+            else: 
+                request.session['loggedin_user'] = "User"
+            
+                context  = {
+                    "test" : "Success",
+                    "user_logged_in": "True",
+                    "userid": request.POST["userid"]
+
+                }
+            
+                
+                return render(request,"home.html",{"context": context})
         
     if request.method == 'GET':
         
@@ -140,10 +158,44 @@ def about(request):
         
         
 
+def new_complaint(request): 
+    if request.method == 'GET':
+        message = "WELCOME TO HOMEPAGE"
+        if 'user_logged_in' in request.session:
+            
+            
+            context  = {
+                    "user_logged_in": request.session['user_logged_in'],
+                    "userid": request.session['userid'],
+                    
+            }
+            return render(request,"new_complaint.html",{ "context" : context })
+        else:
+
+            message = "WELCOME TO HOMEPAGE"
+            return render(request,"new_complaint.html",{ "message" : message })
+
+
 def complaint(request): 
     if request.method == 'GET':
         message = "WELCOME TO HOMEPAGE"
-        return render(request,"complaint.html",{ "message" : message })
+        if 'user_logged_in' in request.session:
+            
+            criterion1 = Q(userid =  request.session['userid']) #any query you want
+            isalready = Complaints.objects.filter(criterion1).values()
+            values = list(isalready)
+            print(values)
+            context  = {
+                    "user_logged_in": request.session['user_logged_in'],
+                    "userid": request.session['userid'],
+                    "complaints":values
+            }
+            return render(request,"complaint.html",{ "context" : context })
+        else:
+
+            message = "WELCOME TO HOMEPAGE"
+            return render(request,"complaint.html",{ "message" : message })
+        
 
     if request.method == 'POST':
         data_to_add = Complaints(
@@ -157,12 +209,24 @@ def complaint(request):
             city = request.POST["city"],
             state = request.POST["state"],
             pincode = request.POST["pincode"],
-            date = request.POST["date"]
+            date = request.POST["date"],
+            userid = request.session['userid']
         )
 
         data_to_add.save()
 
-        return render(request,"home.html",{ "message" : "Complaint submitted" })
+        criterion1 = Q(userid =  request.session['userid']) #any query you want
+        isalready = Complaints.objects.filter(criterion1).values()
+        values = list(isalready)
+        print(values)
+        context  = {
+                "user_logged_in": request.session['user_logged_in'],
+                "userid": request.session['userid'],
+                "complaints":values
+        }
+        return render(request,"complaint.html",{ "context" : context })
+
+        
     
     
 

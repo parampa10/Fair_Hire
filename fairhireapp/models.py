@@ -18,6 +18,7 @@ class User_Logged(models.Model):
 
 class Complaints(models.Model):
     id = models.AutoField(primary_key=True)
+    userid = models.CharField(max_length=100)
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
     mobile = models.CharField(max_length=100)

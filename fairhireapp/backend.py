@@ -16,7 +16,7 @@ def logout(request):
     request.session['user_logged_in'] = ""
     
     return render(request,"login.html")
-
+from django.db.models import Count
 def login(request):
 
     # return render(request,"dashboard.html")
@@ -38,19 +38,31 @@ def login(request):
             message = "login successful"
             request.session['userid'] = request.POST["userid"]
             request.session['user_logged_in'] = "True"
-            
+            # request.session['role'] = request.POST["userid"]
+            user_role = values[0]["role"]
             if(values[0]["role"] == "Admin"):
                 request.session['loggedin_user'] = "Admin"
                 
                 isalready = Complaints.objects.filter().values()
                 values = list(isalready)
-                
-                
+                complain_count = Complaints.objects.all().count()
+                resolved_count = Complaints.objects.filter(
+                    status='resolved').count()
+                pending_count = Complaints.objects.filter(
+                    status='pending').count()
+                in_progress_count = Complaints.objects.filter(
+                    status='in_process').count()
+                print(complain_count)
                 context  = {
                 "test" : "Success",
                 "user_logged_in": "True",
-                "userid": request.POST["userid"],
-                "complaints":values
+                "user_role":"admin",
+                "complaints":values,
+                "c_count":complain_count,
+                "r_count":resolved_count,
+                "p_count":pending_count,
+                "ip_count": in_progress_count,
+                'user_role': 'admin'
                 }
             
                 
@@ -62,8 +74,8 @@ def login(request):
                 context  = {
                     "test" : "Success",
                     "user_logged_in": "True",
-                    "userid": request.POST["userid"]
-
+                    "userid": request.POST["userid"],
+                    
                 }
             
                 
@@ -117,8 +129,8 @@ def home(request):
         if 'user_logged_in' in request.session:
             context  = {
                     "user_logged_in": request.session['user_logged_in'],
-                    "userid": request.session['userid']
-
+                    "userid": request.session['userid'],
+                    
             }
             return render(request,"home.html",{ "context" : context })
         else:

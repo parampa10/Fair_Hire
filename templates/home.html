@@ -292,7 +292,8 @@ body {
                                 <p id="botStarterMessage" class="botText"><span>Loading...</span></p>
                             </div>
     
-                           
+                           <form action="chatbot" method="post" id="chat_form">
+                            {% csrf_token %}
                             <div class="chat-bar-input-block">
                                 <div id="userInput">
                                     <input id="textInput" class="input-box" type="text" name="msg"
@@ -301,11 +302,11 @@ body {
                                 </div>
     
                                 <div class="chat-bar-icons">
-                                    <button onclick="sendButton()" style="background: transparent; border: none;">-></button>
-                                    
+                                    <!-- <button onclick="sendButton()" style="background: transparent; border: none;">-></button> -->
+                                    <input  type="submit" value="->" id="textInputsend" style="background: transparent; border: none;">
                                 </div>
                             </div>
-    
+                            </form>
                             <div id="chat-bar-bottom">
                                 <p></p>
                             </div>
@@ -400,7 +401,7 @@ for (let i = 0; i < coll.length; i++) {
 
     });
 }
-
+   
 function getTime() {
     let today = new Date();
     hours = today.getHours();
@@ -431,83 +432,45 @@ function firstBotMessage() {
 
 firstBotMessage();
 
-// Retrieves the response
-function getHardResponse(userText) {
-    let botResponse = getBotResponse(userText);
-    let botHtml = '<p class="botText"><span>' + botResponse + '</span></p>';
-    $("#chatbox").append(botHtml);
+var count =0
+// $("#textInputsend").click(function (e) {
+    // const one = false
+    //  if (one == true) { return } else {
+        $(document).on('submit', "#chat_form", function (e) {
+        count ++;
+       
+        let userinput = $("#textInput").val()
+        console.log(userinput)
+        let userHtml = '<p class="userText"><span>' + userinput + '</span></p>';
 
-    document.getElementById("chat-bar-bottom").scrollIntoView(true);
-}
+        $("#chatbox").append(userHtml);
+        document.getElementById("chat-bar-bottom").scrollIntoView(true);
 
-//Gets the text text from the input box and processes it
-function getResponse() {
-    let userText = $("#textInput").val();
+        e.preventDefault()
+        $.ajax({
+            type: 'POST',
+            url: '/chatbot',
+            data: {
+                message: $("#textInput").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (data) {
+                $('#textInput').val('');
+                let botHtml = '<p class="botText"><span>' + data.res + '</span></p>';
+                $("#chatbox").append(botHtml);
 
-    if (userText == "") {
-        userText = "I love Code Palace!";
-    }
 
-    let userHtml = '<p class="userText"><span>' + userText + '</span></p>';
+                document.getElementById("chat-bar-bottom").scrollIntoView(true);
+                // Clear the chat input field
 
-    $("#textInput").val("");
-    $("#chatbox").append(userHtml);
-    document.getElementById("chat-bar-bottom").scrollIntoView(true);
 
-    setTimeout(() => {
-        getHardResponse(userText);
-    }, 1000)
-
-}
-
-// Handles sending text via button clicks
-function buttonSendText(sampleText) {
-    let userHtml = '<p class="userText"><span>' + sampleText + '</span></p>';
-
-    $("#textInput").val("");
-    $("#chatbox").append(userHtml);
-    document.getElementById("chat-bar-bottom").scrollIntoView(true);
-
-    //Uncomment this if you want the bot to respond to this buttonSendText event
-    // setTimeout(() => {
-    //     getHardResponse(sampleText);
-    // }, 1000)
-}
-
-function sendButton() {
-    getResponse();
-}
-
-function getBotResponse(input) {
-    //rock paper scissors
-    if (input == "rock") {
-        return "paper";
-    } else if (input == "paper") {
-        return "scissors";
-    } else if (input == "scissors") {
-        return "rock";
-    }
-
-    // Simple responses
-    if (input == "hello") {
-        return "Hello there!";
-    } else if (input == "goodbye") {
-        return "Talk to you later!";
-    } else {
-        return "Try asking something else!";
-    }
-}
-
-function heartButton() {
-    buttonSendText("Heart clicked!")
-}
-
-// Press enter to send a message
-$("#textInput").keypress(function (e) {
-    if (e.which == 13) {
-        getResponse();
-    }
-});
+            }
+        })
+    })
+    // one = true;
+// }
+    
+// });
         </script>
     </body>
 </html>

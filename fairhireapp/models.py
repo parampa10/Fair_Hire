@@ -1,5 +1,6 @@
 from django.db import models
-
+from datetime import timedelta
+from django.utils import timezone
 class User(models.Model):
     userid = models.CharField(primary_key = True, max_length=100)
     email = models.EmailField(null=True)
@@ -17,6 +18,11 @@ class User_Logged(models.Model):
     
 
 class Complaints(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('resolved', 'Resolved'),
+        ('in_process', 'In Process'),
+    )
     id = models.AutoField(primary_key=True)
     userid = models.CharField(max_length=100)
     firstname = models.CharField(max_length=100)
@@ -30,7 +36,17 @@ class Complaints(models.Model):
     state = models.CharField(null=True,max_length=100)
     pincode = models.CharField(null=True,max_length=100)
     date = models.CharField(max_length=100 , null=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pending')
 
+
+class PasswordReset(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timezone.now() <= self.created_at + timedelta(hours=24)
 
 
 

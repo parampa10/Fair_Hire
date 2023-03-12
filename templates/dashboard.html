@@ -7,113 +7,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive Admin Dashboard</title>
     <!-- ======= Styles ====== -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <style>
+        .actives {
+        background-color: #1abc9c;
+        }
+
+    </style>
 </head>
 
 <body>
-    {% include "header.html" %}
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">Fairhire</a>
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                  
+                    {% if context.user_logged_in == "True" %}
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="logout"
+                            id="laws">Logout</a></li>
+                    {% endif %}
+    
+                </ul>
+            </div>
+        </div>
+    </nav>
     <!-- =============== Navigation ================ -->
-    <div class="container">
-        <div class="navigation" style="background-color: #1abc9c;">
+    <div class="container" style="padding-top: 3%;">
+        <div class="navigation " style="background-color: #1abc9c;">
             <ul>
                 <li>
                     <a href="#">
                         <span class="icon">
                            
                         </span>
-                        <span class="title">Fair Hire</span>
+                        <h2 class="title">Fair Hire</h2>
                     </a>
                 </li>
 
-                <li>
+                <li style="background-color: #0e8261; ">
                     <a href="#">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
-                        <span class="title">Dashboard</span>
+                        <h5 class="title ">Dashboard</h5>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
+
+                    <a href="/statistics">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
-                        <span class="title">Statistics</span>
-                    </a>
-                </li>
-<!-- 
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
-                        </span>
-                        <span class="title">Messages</span>
+                        <h5 class="title">Statistics</h5>
                     </a>
                 </li>
 
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="help-outline"></ion-icon>
-                        </span>
-                        <span class="title">Help</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Settings</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="lock-closed-outline"></ion-icon>
-                        </span>
-                        <span class="title">Password</span>
-                    </a>
-                </li> -->
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="log-out-outline"></ion-icon>
-                        </span>
-                        <span class="title">Sign Out</span>
-                    </a>
-                </li>
+              
             </ul>
         </div>
 
         <!-- ========================= Main ==================== -->
-        <div class="main">
+        <div class="main"style="padding-top: 3%;">
             <div class="topbar">
                 <div class="toggle">
                     <ion-icon name="menu-outline"></ion-icon>
                 </div>
 
-                <div class="search">
+                <!-- <div class="search">
                     <label>
                         <input type="text" placeholder="Search here">
                         <ion-icon name="search-outline"></ion-icon>
                     </label>
-                </div>
+                </div> -->
 
-                <div class="user">
-                    <img src="assets/imgs/customer01.jpg" alt="">
-                </div>
+             
             </div>
 
             <!-- ======================= Cards ================== -->
             <div class="cardBox">
                 <div class="card">
                     <div>
-                        <div class="numbers">20</div>
+                        <div class="numbers">{{context.c_count}}</div>
                         <div class="cardName">Complaints</div>
                     </div>
 
@@ -124,7 +109,7 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers">10</div>
+                        <div class="numbers">{{context.r_count}}</div>
                         <div class="cardName">Resolved</div>
                     </div>
 
@@ -135,7 +120,7 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers">05</div>
+                        <div class="numbers">{{context.ip_count}}</div>
                         <div class="cardName">In Progress</div>
                     </div>
 
@@ -146,7 +131,7 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers">05</div>
+                        <div class="numbers">{{context.p_count}}</div>
                         <div class="cardName">Pending</div>
                     </div>
 
@@ -163,38 +148,59 @@
                         <h2>Complaints</h2>
                         
                     </div>
-
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-outline-primary" id="filter-all">All</button>
+    <button type="button" class="btn btn-outline-primary" id="filter-resolved">Resolved</button>
+    <button type="button" class="btn btn-outline-primary" id="filter-in-process">In Process</button>
+    <button type="button" class="btn btn-outline-primary" id="filter-pending">Pending</button>
+</div>
                     <table>
+                        
                         <thead style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
                             <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-                              <td style=" width: 8%; font-size: 20px;">Index</td>  
-                              <td style=" width: 23%; font-size: 20px;">Company</td>
-                                <td style=" width: 23%; font-size: 20px;">Interviewee</td>
-                                <td style=" width: 23%; font-size: 20px;">Discrimination Type</td>
-                                <td style="text-align:end; width: 23%; font-size: 20px;">Status</td>
-                                
+                              <td style="text-align:center; width: 8%; font-size: 20px;">Index</td>  
+                              <td style=" text-align:center;width: 15%; font-size: 20px;">Company</td>
+                                <td style="text-align:center; width: 15%; font-size: 20px;">Interviewee</td>
+                                <td style="text-align:center; width: 15%; font-size: 20px;">Discrimination Type</td>
+                                <td style=" text-align:center; width: 25%; font-size: 20px;">
+                                    
+                                status
+                            </td>
+                                <td style="text-align:end; width: 15%; font-size: 20px;">Details</td>
                             </tr>
                         </thead>
 
                         <tbody>
                             {% for j in context.complaints %}
                         
-                       
                             <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+                               
                               <td style=" width: 8%;"> {{ forloop.counter }}</td>
-                                <td style=" width: 23%;">{{j.company}}</td>
-                                <td style=" width: 23%;">{{j.firstname}}</td>
-                                <td style=" width: 23%;">{{j.type_of_disability}}</td>
-                                <td>
-                                    <select name="" id="">
-                                        <option value="Pending">Pending</option>
-                                        <option value="Solved">Solved</option>
-                                        <option value="In Process">In Process</option>
-                                        
-                                    </select>
-                                </td>
-                                <!-- <td style="text-align:end; width: 23%;"><span class="">Pending</span></td> -->
-                            </tr>
+                          
+                                <td style=" text-align:center;width: 15%;">{{j.company}}</td>
+                                <td style=" text-align:center;width: 15%;">{{j.firstname}}</td>
+                                <td style=" text-align:center;width: 15%;">{{j.type_of_disability}}</td>
+                                <td class="aboutstatus" style="display: none;">{{j.status}}</td>
+
+                                     <td style="text-align:center; width: 25%;">
+                                            <form  method="post">
+                                        {% csrf_token %}
+
+                                        <label for="status">Status:</label>
+                                        <select name="status" class="status" data-complaint-id="{{ j.id }}">
+                                            <option value="resolved" {% if j.status == "resolved" %}selected {%endif%}>resolved</option>
+                                           
+                                            <option value="in_process"{% if j.status == "in_process" %}selected {%endif%}>In Process</option>
+                                       
+                                            <option value="pending" {% if j.status == "pending" %}selected {%endif%}>Pending</option>
+                                    
+                                        </select>
+                                        </form>
+                                        <br>
+                                    </td>
+                                <td style=" width: 15%;"><a href="{% url 'complain_details' id=j.id %}">View Details</a></td>
+                                </tr>
+                           
                             {% endfor %}
 
                             
@@ -209,8 +215,10 @@
     </div> 
 
     <!-- =========== Scripts =========  -->
-    
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
@@ -237,6 +245,59 @@ toggle.onclick = function () {
   navigation.classList.toggle("active");
   main.classList.toggle("active");
 };
+   $(".status").change(function () {
+        // Get the selected value and the complaint id from the data attribute
+        var status = $(this).val();
+        var complaint_id = $(this).data("complaint-id");
+        
+        console.log(complaint_id)
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'change_status' pk=0 %}".replace('0', parseInt(complaint_id)),
+            data: {
+                "status": status,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function () {
+               var status_td = $("#status").parent();
+                status_td.text(status);
+                // Clear the chat input field
+                location.reload();
 
+            }
+        })
+    })
+     $(document).ready(function () {
+            // Attach click handlers to filter buttons
+            $('#filter-all').on('click', function () {
+                filterTable('all');
+            });
+            $('#filter-resolved').on('click', function () {
+                filterTable('resolved');
+            });
+            $('#filter-in-process').on('click', function () {
+                filterTable('in_process');
+            });
+            $('#filter-pending').on('click', function () {
+                filterTable('pending');
+            });
+        });
+
+        function filterTable(status) {
+            $('table tbody tr').each(function () {
+                if (status === 'all') {
+                    $(this).show();
+                } else {
+                    var rowStatus = $(this).find('td:eq(4)').text();
+                    console.log(rowStatus)
+                    if (rowStatus === status) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                }
+            });
+        }
+  </script>
 </script>
 </html>

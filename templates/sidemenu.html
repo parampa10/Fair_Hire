@@ -1,0 +1,46 @@
+<div class="navigation " style="padding: 0px; margin: 0px; background-color: #1abc9c; "  >
+    <ul>
+        <li>
+            <a href="#">
+                <span class="icon">
+                   
+                </span>
+                <h2 class="title">Fair Hire</h2>
+            </a>
+        </li>
+
+        <li>
+            <a href="/dashboard">
+                <h4 id="dashboard-link" >Dashboard</h4>
+            </a>
+        </li>
+    {% if context.role == "Admin" %}
+        <li>
+            <a href="/statistics">
+                <h4 id="statistics-link" >Statistics</h4>
+            </a>
+        </li>
+        <li>
+            <a href="/newuser">
+                <h4 id="newuser-link">Add user</h4>
+            </a>
+        </li>
+       
+    {% endif %}
+    </ul>
+</div>
+<style> 
+
+</style>
+<script>
+    console.log(window.location.pathname);
+    if(window.location.pathname == "/dashboard"){
+        document.getElementById("dashboard-link").style.color = "#2c3e50";
+    }
+    else if(window.location.pathname == "/statistics"){
+        document.getElementById("statistics-link").style.color = "#2c3e50";
+    }
+    else if(window.location.pathname == "/newuser"){
+        document.getElementById("newuser-link").style.color = "#2c3e50";
+    }
+</script>

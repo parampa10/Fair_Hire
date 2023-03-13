@@ -1,5 +1,7 @@
 from django.urls import path,include
-
+from .views import chatbot
+from .views import change_status
+from .views import dashboard
 from . import views
 from fairhireapp.backend import login,complaint, home, about, laws, registeruser, logout, new_complaint
 # from product_analysis.apidata import complaint, home,login, signup, customize, save, toedit, edit, show_files,data,show_product, show_all_product, delete, getCardData, formSave
@@ -10,10 +12,20 @@ urlpatterns = [
     path('login',login),
     path('complaint',complaint),
     path('new_complaint',new_complaint),
+    path('complain_status/<int:pk>', change_status, name='change_status'),
     path('about',about),
     path('laws',laws),
     path('registeruser',registeruser),
     path('logout', logout),
+    path('statistics', views.Statistics),
+    path('complain_details/<int:id>',
+         views.complain_details, name='complain_details'),
+    path('chatbot', chatbot, name='chatbot'),
+    path('dashboard',dashboard, name='dashboard'),
+    path('newuser', views.newuser),
+    # path('addnewuser',views.addnewuser)
+
+    
     # path('login',login),
     # path('signup',signup),
     # path('customize/<str:userid>',customize, name="customize"),

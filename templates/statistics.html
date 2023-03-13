@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+
+    
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin statistics</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- ======= Styles ====== -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <style>
+        .main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 70px !important;
+            padding-left: 10px;
+            text-align: center;
+            color:  #2c3e50;;
+        }
+    
+        .main>div {
+            width: calc(40% - 20px);
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+     
+        @media screen and (max-width: 768px) {
+            .main>div {
+                width: calc(50% - 20px);
+            }
+        }
+    
+        @media screen and (max-width: 576px) {
+            .main>div {
+                width: 100%;
+            }
+        }
+    </style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard</title>
+    <!-- ======= Styles ====== -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <style>
+        .actives {
+        background-color: #1abc9c;
+        }
+
+    </style>
+</head>
+
+<body>
+    {% include "header.html" %}
+
+
+    <div class="container" style="display: flex; justify-content: space-between; padding: 0px; margin: 0px; width: 100%;">
+
+        {% include "sidemenu.html" %}
+
+        <!-- ========================= Main ==================== -->
+        <div class="main" style="padding-top: 3%;" style="width: 90% !important;">
+            <div>
+                <h3>Complaints by City</h3>
+                <div id="city-pie"></div>
+            </div>
+            <div>
+                <h3>Complaints by State</h3>
+                <div id="state-bar"></div>
+            </div>
+            <div>
+                <h3>Complaints by Company</h3>
+                <div id="companies-bar"></div>
+            </div>
+            <div>
+                <h3>Current Status</h3>
+                <div id="status-pie"></div>
+            </div>
+            </div>
+        </div>
+    </div> 
+
+    <!-- =========== Scripts =========  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+<script>
+    // add hovered class to selected list item
+let list = document.querySelectorAll(".navigation li");
+
+function activeLink() {
+  list.forEach((item) => {
+    item.classList.remove("hovered");
+  });
+  this.classList.add("hovered");
+}
+
+list.forEach((item) => item.addEventListener("mouseover", activeLink));
+
+   $(".status").change(function (e) {
+        // Get the selected value and the complaint id from the data attribute
+        var status = $(this).val();
+        var complaint_id = $(this).data("complaint-id");
+         e.preventDefault()
+        console.log(complaint_id)
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'change_status' pk=0 %}".replace('0', parseInt(complaint_id)),
+            data: {
+                "status": status,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (data) {
+                console.log(data)
+               var status_td = $("#status").parent();
+                status_td.text(status);
+                // Clear the chat input field
+                // location.reload();
+
+            }
+        })
+       
+    })
+     $(document).ready(function () {
+            // Attach click handlers to filter buttons
+            $('#filter-all').on('click', function () {
+                filterTable('all');
+            });
+            $('#filter-resolved').on('click', function () {
+                filterTable('resolved');
+            });
+            $('#filter-in-process').on('click', function () {
+                filterTable('in_process');
+            });
+            $('#filter-pending').on('click', function () {
+                filterTable('pending');
+            });
+        });
+
+        function filterTable(status) {
+            $('table tbody tr').each(function () {
+                if (status === 'all') {
+                    $(this).show();
+                } else {
+                    var rowStatus = $(this).find('.aboutstatus').text();
+                    var adminstatus = $(this).find('.aboutstatustoadmin').text().toLowerCase();
+                    console.log(adminstatus)
+
+                    if (rowStatus == status) {
+                        $(this).show();
+                    }else if(adminstatus==status)
+                    {         $(this).show();
+                    } else {
+                    $(this).hide();
+                    }
+            }
+            });
+        }
+  </script>
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- ====== ionicons ======= -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script>
+    var cities = {{ context.cities| safe }};
+    var city_counts = {{ context.object_counts| safe }};
+    var states = {{ context.states| safe }};
+    var state_counts = {{ context.state_counts| safe }};
+    var companies = {{ context.companies| safe }};
+    var company_counts = {{ context.company_counts| safe }};
+    var status = {{ context.status| safe }};
+    var status_counts = {{ context.status_counts | safe }};
+    // var new_sts=status
+    // Pie chart for complaints by city
+    var city_data = [{
+        values: city_counts,
+        labels: cities,
+        type: 'pie'
+    }];
+
+    var city_layout = {
+        height: 400,
+        width: 400
+    };
+
+    Plotly.newPlot('city-pie', city_data, city_layout);
+    
+    // Bar chart for complaints by state
+    var state_data = [{
+        x: states,
+        y: state_counts,
+        type: 'bar'
+    }];
+
+    var state_layout = {
+        height: 400,
+        width: 400,
+        xaxis: {
+            title: 'State'
+        },
+        yaxis: {
+            title: 'Complaint Count'
+        }
+    };
+
+    Plotly.newPlot('state-bar', state_data, state_layout);
+
+// Bar chart for complaints by state
+var companies_data = [{
+    x: companies,
+    y: company_counts,
+    type: 'bar'
+}];
+
+var companies_layout = {
+    height: 400,
+    width: 400,
+    xaxis: {
+        title: 'Company'
+    },
+    yaxis: {
+        title: 'Complaint Count'
+    }
+};
+
+Plotly.newPlot('companies-bar', companies_data, companies_layout);
+
+    // Pie chart for complaints by company
+    // var company_data = [{
+    //     values: company_counts,
+    //     labels: companies,
+    //     type: 'bar'
+    // }];
+
+    // var company_layout = {
+    //     height: 400,
+    //     width: 400
+    // };
+
+    // Plotly.newPlot('company-bar', company_data, company_layout);
+     // Pie chart for complaints by company
+        // var sts = [{
+        //     values: status_counts,
+        //     labels: status,
+        //     // labels: status,
+        //     type: 'pie'
+        // }];
+
+        // var status_layout = {
+        //     height: 400,
+        //     width: 400
+        // };
+        // // console.log(new_ sts)
+        // Plotly.newPlot('status-pie', sts, status_layout);
+        var status_data = [{
+                values: status_counts,
+                labels: {{ context.status | safe }},
+                type: 'pie'
+            }];
+
+            var status_layout = {
+                height: 400,
+                width: 400
+            };
+
+        Plotly.newPlot('status-pie', status_data, status_layout);
+</script>
+
+</html>
+
+
+
+
+
+
+
+
+
+

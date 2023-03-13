@@ -23,7 +23,10 @@
       <form action="registeruser" method="post" class="w-100 p-5">
         {% csrf_token %}
         <h1 class="text-light mb-4"><b>Register</b></h1>        
-        <input type="text" name="email" placeholder="Username" class="w-100 my-3 text-light py-2"><br>        
+        <input type="text" name="fname" placeholder="First Name" class="w-100 my-3 text-light py-2"><br>
+        <input type="text" name="lname" placeholder="Last Name" class="w-100 my-3 text-light py-2"><br>
+        <input type="text" name="email" placeholder="email" class="w-100 my-3 text-light py-2"><br>        
+
         <input type="password" name="password" placeholder="Password" class="w-100 my-3 text-light py-2"><br>
         <button class="w-50 my-3 py-2" style="border-radius: 35px;" id="submitButton" type="submit" >Register</button>
         <!-- <input type="submit" onclick="xyz()" value="Login" class="w-50 my-3 py-2"> -->

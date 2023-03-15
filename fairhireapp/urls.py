@@ -22,7 +22,17 @@ urlpatterns = [
          views.complain_details, name='complain_details'),
     path('chatbot', chatbot, name='chatbot'),
     path('dashboard',dashboard, name='dashboard'),
+    path('chat_staff', views.chat_staff, name='chat_staff'),
     path('newuser', views.newuser),
+   
+    path('chat_request', views.chat_request),
+    path('get_messages/<int:id>', views.get_messages),
+    path('resolved_chat/<int:id>', views.resolved_chat, name="resolved_chat"),
+    path('chat_request/chat_message', views.chat_message, name='chat_message'),
+    path('chat_staff/staff_chat_room/<int:id>', views.staff_chat_room, name='staff_chat_room'),
+
+
+
     # path('addnewuser',views.addnewuser)
 
     

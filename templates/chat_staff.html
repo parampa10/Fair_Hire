@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard</title>
+    <!-- ======= Styles ====== -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <style>
+        .actives {
+            background-color: #1abc9c;
+        }
+    </style>
+</head>
+
+<body>
+    {% include "header.html" %}
+
+
+    <div class="container"
+        style="display: flex; justify-content: space-between; padding: 0px; margin: 0px; width: 100%;">
+
+        {% include "sidemenu.html" %}
+
+        <!-- ========================= Main ==================== -->
+        <div class="main" style="padding-top: 3%;" style="width: 90% !important;">
+
+          
+            <!-- ================ Order Details List ================= -->
+            <div class="details">
+                <div class="recentOrders" style="display: flex; flex-wrap: wrap;">
+                    <div style="width: 100%;">
+                        <h2>chat</h2>
+                    </div>
+                    <div class="btn-group" role="group"
+                        style="height: 50px; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+                        <button type="button" class="btn btn-outline-primary" id="filter-all">All</button>
+                        <button type="button" class="btn btn-outline-primary" id="filter-resolved">Resolved</button>
+                        <button type="button" class="btn btn-outline-primary" id="filter-in-process">In Process</button>
+                        <button type="button" class="btn btn-outline-primary" id="filter-pending">Pending</button>
+                    </div>
+                    <table class="border">
+
+                        <thead
+                            style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px; ">
+                            <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+                                <td style="text-align:center; width: 8%; font-size: 20px;">Index</td>
+                                <td style=" text-align:center;width: 15%; font-size: 20px;">First Name</td>
+                                <td style=" text-align:center;width: 15%; font-size: 20px;">status</td>
+                                <td style="text-align:center; width: 15%; font-size: 20px;">chat</td>
+                               
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for j in context.chats %}
+
+                            <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; ">
+
+                                <td style=" text-align:center; width: 8%;"> {{ forloop.counter }}</td>
+
+                                <td style=" text-align:center;width: 15%;">{{j.requester}}</td>
+                                
+                                <td style=" text-align:center;width: 25%;">{{j.is_active}}</td>
+                                <td class="aboutstatus" style="display: none; width: 15%;">{{j.status}}</td>
+                                <td style=" width: 15%;"><a href="{% url 'staff_chat_room' id=j.id %}">View chat</a></td>
+                            </tr>
+
+                            {% endfor %}
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+<script>
+
+
+    // add hovered class to selected list item
+    let list = document.querySelectorAll(".navigation li");
+
+    function activeLink() {
+        list.forEach((item) => {
+            item.classList.remove("hovered");
+        });
+        this.classList.add("hovered");
+    }
+
+    list.forEach((item) => item.addEventListener("mouseover", activeLink));
+
+    $(".status").change(function (e) {
+        // Get the selected value and the complaint id from the data attribute
+        var status = $(this).val();
+        var complaint_id = $(this).data("complaint-id");
+        e.preventDefault()
+        console.log(complaint_id)
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'change_status' pk=0 %}".replace('0', parseInt(complaint_id)),
+            data: {
+                "status": status,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (data) {
+                console.log(data)
+                var status_td = $("#status").parent();
+                status_td.text(status);
+                // Clear the chat input field
+                // location.reload();
+
+            }
+        })
+
+    })
+    $(document).ready(function () {
+        // Attach click handlers to filter buttons
+        $('#filter-all').on('click', function () {
+            filterTable('all');
+        });
+        $('#filter-resolved').on('click', function () {
+            filterTable('resolved');
+        });
+        $('#filter-in-process').on('click', function () {
+            filterTable('in_process');
+        });
+        $('#filter-pending').on('click', function () {
+            filterTable('pending');
+        });
+    });
+
+    function filterTable(status) {
+        $('table tbody tr').each(function () {
+            if (status === 'all') {
+                $(this).show();
+            } else {
+                var rowStatus = $(this).find('.aboutstatus').text();
+                var adminstatus = $(this).find('.aboutstatustoadmin').text().toLowerCase();
+                console.log(adminstatus)
+
+                if (rowStatus == status) {
+                    $(this).show();
+                } else if (adminstatus == status) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            }
+        });
+    }
+</script>
+</script>
+
+</html>

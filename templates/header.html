@@ -56,7 +56,10 @@
                         {% if context.user_logged_in == "True" %}  
                             <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
                                 href="/complaint" id="complaint">Complaint</a></li>
-                      
+                                {% if context.role == "User" %}
+                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/chat_request"
+                                    id="chat">chat</a></li>
+                                {% endif %}
                     {% endif %}
 
                 <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="laws" id="laws">Laws &

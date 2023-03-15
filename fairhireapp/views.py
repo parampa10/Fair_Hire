@@ -1,8 +1,10 @@
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseBadRequest
 from datetime import datetime
+from random import randint
+
 # from django.views.generic import TemplateView
 from django.db.models import Count
 # from .models import PasswordReset
@@ -13,7 +15,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
 # from django.contrib.auth.models import User
-from fairhireapp.models import Complaints, User
+from fairhireapp.models import Complaints, User, ChatMessage, ChatRoom
 # from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.urls import reverse
 import requests
@@ -42,7 +44,7 @@ def chatbot(request):
         print("user:", message)
         # print("in2")
         # prompt = message
-        prompt = f"give me brief answer related to dicrimination for {message} \n"
+        prompt = f"give me brief answer related dicrimination {message} \n"
         response = openai.Completion.create(
             engine=model_engine,
             prompt=prompt,
@@ -65,11 +67,10 @@ def chatbot(request):
     return JsonResponse({'error': 'Invalid request.'})
 
 
-
 def change_status(request, pk):
     complaint = get_object_or_404(Complaints, pk=pk)
     new_status = request.POST.get('status')
-    print(new_status)
+
     if new_status in ('resolved', 'in_process', 'pending'):
         complaint.status = new_status
         complaint.save()
@@ -78,7 +79,7 @@ def change_status(request, pk):
     else:
         return HttpResponseBadRequest('Invalid status')
         # return redirect(reverse('dashboard'),context)
-    
+
     # context = {"complaint": complaint}
     # return render(request, "dashboard.html", {"context": context})
     # return render(request,"dashboard.html",{"context": values})
@@ -88,63 +89,59 @@ def dashboard(request):
     # values = Complaints.objects.all().order_by('date')
     # isalready = Complaints.objects.filter().values()
     # values = list(isalready)
-    if (request.session['user_logged_in'] == "True"):
-        role = request.session['loggedin_user']
-        userid = request.session['userid']
-        fname = request.session['fname']
-        if role == 'Staff':
-            isalready = Complaints.objects.filter(assigniduserid=userid).values()
-            values = list(isalready)
-            complain_count = Complaints.objects.filter(assigniduserid=userid).count()
-            resolved_count = Complaints.objects.filter(
-                assigniduserid=userid, status='resolved').count()
-            pending_count = Complaints.objects.filter(
-                assigniduserid=userid, status='pending').count()
-            in_progress_count = Complaints.objects.filter(
-                assigniduserid=userid, status='in_process').count()
-        else:
-            isalready = Complaints.objects.all()
-            values = list(isalready)
+    role = request.session['loggedin_user']
+    userid = request.session['userid']
+    fname = request.session['fname']
+    if role == 'Staff':
+        isalready = Complaints.objects.filter(assigniduserid=userid).values()
+        values = list(isalready)
+        complain_count = Complaints.objects.filter(
+            assigniduserid=userid).count()
+        resolved_count = Complaints.objects.filter(
+            assigniduserid=userid, status='resolved').count()
+        pending_count = Complaints.objects.filter(
+            assigniduserid=userid, status='pending').count()
+        in_progress_count = Complaints.objects.filter(
+            assigniduserid=userid, status='in_process').count()
+    else:
+        isalready = Complaints.objects.all()
+        values = list(isalready)
 
-            complain_count = Complaints.objects.all().count()
-            resolved_count = Complaints.objects.filter(
-                status='resolved').count()
-            pending_count = Complaints.objects.filter(
-                status='pending').count()
-            in_progress_count = Complaints.objects.filter(
-                status='in_process').count()
-    
-   
-   
-        context  = {
+        complain_count = Complaints.objects.all().count()
+        resolved_count = Complaints.objects.filter(
+            status='resolved').count()
+        pending_count = Complaints.objects.filter(
+            status='pending').count()
+        in_progress_count = Complaints.objects.filter(
+            status='in_process').count()
+
+    context = {
         "test": "Success",
         "user_logged_in": "True",
-        "user_role":"admin",
-        "complaints":values,
-        "c_count":complain_count,
-        "r_count":resolved_count,
-        "p_count":pending_count,
+        "user_role": "admin",
+        "complaints": values,
+        "c_count": complain_count,
+        "r_count": resolved_count,
+        "p_count": pending_count,
         "ip_count": in_progress_count,
-        "role":role,
-        "fname":fname
-        }
-        # return JsonResponse({"context": context})
-        return render(request, "dashboard.html", {"context": context})
-
-    else: 
-        return render(request, "login.html")
+        "role": role,
+        "fname": fname
+    }
+    # return JsonResponse({"context": context})
+    return render(request, "dashboard.html", {"context": context})
 
 
-def complain_details(request,id):
-    data=Complaints.objects.get(id=id)
-    context  = {
-                    "user_logged_in": request.session['user_logged_in'],
-                    "userid": request.session['userid'],
-                    "role": request.session['loggedin_user']
-                    
+def complain_details(request, id):
+    data = Complaints.objects.get(id=id)
 
-            }
-    return render(request, 'user_complain_details.html', {'context': context, 'data': data })
+    context = {
+        "user_logged_in": request.session['user_logged_in'],
+        "userid": request.session['userid'],
+        "role": request.session['loggedin_user']
+
+
+    }
+    return render(request, 'user_complain_details.html', {'context': context, 'data': data})
 
 
 # --------------------------------------------------------------------------------
@@ -182,44 +179,41 @@ def Statistics(request):
         'state_counts': state_counts,
         'companies': companies,
         'company_counts': company_counts,
-        "status":status,
+        "status": status,
         'status_counts': status_counts
     }
     # print(context)
-    return render(request, 'statistics.html', {"context":context})
+    return render(request, 'statistics.html', {"context": context})
 
 
 def newuser(request):
 
     message = ""
-    
-    
-            
-    
+
     if request.method == 'POST':
         role = request.session['loggedin_user']
         criterion1 = Q(userid=request.POST["email"])  # any query you want
         isalready = User.objects.filter(criterion1).values()
         values = list(isalready)
-        
+
         if(len(values) == 0):
 
             print(request.POST['role'])
 
             data_to_add = User(
-            userid = request.POST["email"],
-            password = request.POST["password"],
-            role=request.POST['role'],
-            email = request.POST["email"],
-            fname=request.POST["fname"],
-            lname=request.POST["lname"]
+                userid=request.POST["email"],
+                password=request.POST["password"],
+                role=request.POST['role'],
+                email=request.POST["email"],
+                fname=request.POST["fname"],
+                lname=request.POST["lname"]
 
             )
 
             data_to_add.save()
-            context={
+            context = {
                 "message": "Registration Successful",
-                "role":role
+                "role": role
             }
             return render(request, "newuser.html", {"context": context})
 
@@ -227,20 +221,176 @@ def newuser(request):
             message = "This user is already registered"
             return JsonResponse(message, safe=False)
 
-           
-        
     if request.method == 'GET':
-      if 'user_logged_in' in request.session:
+        if 'user_logged_in' in request.session:
             role = request.session['loggedin_user']
             context = {
                 "user_logged_in":  request.session['user_logged_in'],
                 "role": role
             }
             return render(request, "newuser.html", {"context": context})
-# def newuser(request):
+
+#chat_perpose
 
 
-    # return render(request, "newuser.html", {"context": "Registration Successful"})
-  
-    # if request.method == 'GET':
-        # return render(request, "registeruser.html", {"message": message})
+def chat_staff(request):
+    role = request.session['loggedin_user']
+    userid = request.session['userid']
+    # fname, lname=
+    # fname = request.session['fname']
+    if role == 'chat_staff':
+        isalready = ChatRoom.objects.filter(assigned_to=userid)
+        values = list(isalready)
+
+        chatroom = ChatRoom.objects.filter(assigned_to=userid).count()
+        pending_count = ChatRoom.objects.filter(
+            is_active=True).count()
+        resolved_count = ChatRoom.objects.filter(
+            is_active=False).count()
+
+        context = {
+            "user_logged_in": request.session['user_logged_in'],
+            "userid": request.session['userid'],
+            "role": request.session['loggedin_user'],
+            'chats': values,
+            "r_count": resolved_count,
+            "p_count": pending_count,
+
+        }
+        return render(request, 'chat_staff.html', {'context': context})
+    else:
+        return render(request, 'login.html')
+
+
+def chat_request(request):
+    current_user_email = request.session['userid']
+    current_user = User.objects.get(email=current_user_email)
+    staff_users = User.objects.filter(role='chat_staff')
+    chat_count = {}
+    for user in staff_users:
+        chat_count[user.userid] = ChatRoom.objects.filter(
+            assigned_to=user.userid).count()
+
+    min_chat = min(chat_count.values())
+    least_chat_users = [
+        userid for userid, count in chat_count.items() if count == min_chat]
+    assigned_user_id = least_chat_users[randint(
+        0, len(least_chat_users)-1)]
+    assigned_user = User.objects.get(email=assigned_user_id)
+
+    chat_room = ChatRoom.objects.create(
+        assigned_to=assigned_user, requester=current_user)
+
+    context = {
+        "user_logged_in": request.session['user_logged_in'],
+        "userid": request.session['userid'],
+        "role": request.session['loggedin_user'],
+        'chatroom': chat_room
+    }
+    return render(request, 'chat.html', {'context': context})
+
+
+def staff_chat_room(request,id):
+    chat_room = ChatRoom.objects.get(id=id)
+    print(chat_room)
+    context = {
+        "user_logged_in": request.session['user_logged_in'],
+        "userid": request.session['userid'],
+        "role": request.session['loggedin_user'],
+        'chatroom': chat_room
+    }
+    return render(request, 'chat.html', {'context': context})
+
+def chat_message(request):
+    if request.method == 'POST':
+        chat_room_id = request.POST.get('chat_room_id')
+        sender_id = request.POST.get('sender_id')
+        message = request.POST.get('message')
+        chat_room = ChatRoom.objects.get(id=chat_room_id)
+        sender = User.objects.get(userid=sender_id)
+        chat_message = ChatMessage.objects.create(
+            chat_room=chat_room,
+            sender=sender,
+            message=message
+        )
+        print(chat_message)
+        response_data = {
+            'message': message,
+            'sender': sender.email
+        }
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({})
+
+
+def get_messages(request, id):
+    role = request.session.get('loggedin_user')
+    
+    try:
+        print("fuck")
+        print(ChatRoom.objects.get(id=id))
+        chat_room = ChatRoom.objects.get(id=id)
+    except ChatRoom.DoesNotExist:
+        messages = [{'sender': " From Other Side ", 'message': "chat closed"}]
+        print(messages)
+        return JsonResponse({'messages':list(messages)})
+        return redirect('chat_staff' if role == 'chat_staff' else '/')
+        # if role == "User":
+        #     return redirect('')
+        # elif role == "chat_staff":
+        #     return redirect('chat_staff')
+    messages = ChatMessage.objects.filter(
+        chat_room=chat_room).values('sender', 'message')
+    print(messages)
+    return JsonResponse({'messages': list(messages)})
+
+
+def resolved_chat(request, id):
+    role = request.session.get('loggedin_user')
+    userid = request.session.get('userid')
+    try:
+        chat_room = ChatRoom.objects.get(id=id)
+    except ChatRoom.DoesNotExist:
+        return redirect('chat_staff' if role == 'chat_staff' else '/')
+    chat_room.is_active = False
+    chat_room.save()
+    chat_room.resolve()
+    return redirect('chat_staff' if role == 'chat_staff' else '/')
+
+# def get_messages(request, id):
+#     role = request.session['loggedin_user']
+#     userid = request.session['userid']
+#     print(ChatRoom.objects.get(id=id))
+#     try:
+#         chat_room = ChatRoom.objects.get(id=id)
+#         print(chat_room)
+#     except ChatRoom.DoesNotExist:
+#         if role == "User":
+#             return redirect('')
+#         else:
+#             return redirect('chat_staff')
+#     messages = ChatMessage.objects.filter(
+#         chat_room=chat_room).values('sender', 'message')
+#     print(messages)
+#     return JsonResponse({'messages': list(messages)})
+
+
+
+
+# def resolved_chat(request, id):
+#     role = request.session['loggedin_user']
+#     userid = request.session['userid']
+#     # fname, lname=
+#     # fname = request.session['fname']
+#     if role == 'chat_staff':
+#         chat_room = ChatRoom.objects.get(id=id)
+#         chat_room.is_active = False
+#         chat_room.save()
+#         chat_room.resolve()
+#         return redirect('chat_staff')
+#     else:
+#         chat_room = ChatRoom.objects.get(id=id)
+#         chat_room.is_active = False
+#         chat_room.save()
+#         chat_room.resolve()
+#         return redirect('/')

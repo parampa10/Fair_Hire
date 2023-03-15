@@ -88,47 +88,51 @@ def dashboard(request):
     # values = Complaints.objects.all().order_by('date')
     # isalready = Complaints.objects.filter().values()
     # values = list(isalready)
-    role = request.session['loggedin_user']
-    userid = request.session['userid']
-    fname = request.session['fname']
-    if role == 'Staff':
-        isalready = Complaints.objects.filter(assigniduserid=userid).values()
-        values = list(isalready)
-        complain_count = Complaints.objects.filter(assigniduserid=userid).count()
-        resolved_count = Complaints.objects.filter(
-            assigniduserid=userid, status='resolved').count()
-        pending_count = Complaints.objects.filter(
-            assigniduserid=userid, status='pending').count()
-        in_progress_count = Complaints.objects.filter(
-            assigniduserid=userid, status='in_process').count()
-    else:
-        isalready = Complaints.objects.all()
-        values = list(isalready)
+    if (request.session['user_logged_in'] == "True"):
+        role = request.session['loggedin_user']
+        userid = request.session['userid']
+        fname = request.session['fname']
+        if role == 'Staff':
+            isalready = Complaints.objects.filter(assigniduserid=userid).values()
+            values = list(isalready)
+            complain_count = Complaints.objects.filter(assigniduserid=userid).count()
+            resolved_count = Complaints.objects.filter(
+                assigniduserid=userid, status='resolved').count()
+            pending_count = Complaints.objects.filter(
+                assigniduserid=userid, status='pending').count()
+            in_progress_count = Complaints.objects.filter(
+                assigniduserid=userid, status='in_process').count()
+        else:
+            isalready = Complaints.objects.all()
+            values = list(isalready)
 
-        complain_count = Complaints.objects.all().count()
-        resolved_count = Complaints.objects.filter(
-            status='resolved').count()
-        pending_count = Complaints.objects.filter(
-            status='pending').count()
-        in_progress_count = Complaints.objects.filter(
-            status='in_process').count()
+            complain_count = Complaints.objects.all().count()
+            resolved_count = Complaints.objects.filter(
+                status='resolved').count()
+            pending_count = Complaints.objects.filter(
+                status='pending').count()
+            in_progress_count = Complaints.objects.filter(
+                status='in_process').count()
     
    
    
-    context  = {
-    "test": "Success",
-    "user_logged_in": "True",
-    "user_role":"admin",
-    "complaints":values,
-    "c_count":complain_count,
-    "r_count":resolved_count,
-    "p_count":pending_count,
-    "ip_count": in_progress_count,
-    "role":role,
-    "fname":fname
-    }
-    # return JsonResponse({"context": context})
-    return render(request, "dashboard.html", {"context": context})
+        context  = {
+        "test": "Success",
+        "user_logged_in": "True",
+        "user_role":"admin",
+        "complaints":values,
+        "c_count":complain_count,
+        "r_count":resolved_count,
+        "p_count":pending_count,
+        "ip_count": in_progress_count,
+        "role":role,
+        "fname":fname
+        }
+        # return JsonResponse({"context": context})
+        return render(request, "dashboard.html", {"context": context})
+
+    else: 
+        return render(request, "login.html")
 
 
 def complain_details(request,id):

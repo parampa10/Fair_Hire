@@ -43,6 +43,35 @@ class Complaints(models.Model):
     assigniduserid = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True)
 
+
+class ChatRoom(models.Model):
+    assigned_to = models.ForeignKey(
+        User, related_name='chat_assignments', on_delete=models.CASCADE)
+    requester = models.ForeignKey(
+        User, related_name='chat_requests', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'Chat room {self.id} assigned to {self.assigned_to}'
+
+    def resolve(self):
+            # delete all messages associated with this chat room
+            self.messages.all().delete()
+            # delete the chat room itself
+            self.delete()
+            
+class ChatMessage(models.Model):
+    chat_room = models.ForeignKey(
+        ChatRoom, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message from {self.sender} in chat room {self.chat_room.id}'
+
+
 # class PasswordReset(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE)
 #     token = models.CharField(max_length=255)

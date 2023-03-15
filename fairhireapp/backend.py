@@ -43,6 +43,9 @@ def login(request):
             user_role = values[0]["role"]
             fname=values[0]["fname"]
             request.session['fname'] = fname
+            if(values[0]["role"] == "chat_staff"):
+                request.session['loggedin_user'] = "chat_staff"
+                return redirect("/chat_staff")
             # print(fname)
             if(values[0]["role"] == "Admin" or values[0]["role"] == "Staff"):
                 if (values[0]["role"] == "Admin" ):
@@ -112,7 +115,7 @@ def registeruser(request):
             data_to_add = User(
             userid = request.POST["email"],
             password = request.POST["password"],
-            role = "user",
+            role = "User",
             email = request.POST["email"],
 
             )
@@ -138,7 +141,7 @@ def home(request):
 
 
             role = request.session['loggedin_user']
-
+            print(role)
             context  = {
                     "user_logged_in": request.session['user_logged_in'],
                     "userid": request.session['userid'],
@@ -214,7 +217,7 @@ def complaint(request):
             criterion1 = Q(userid =  request.session['userid']) #any query you want
             isalready = Complaints.objects.filter(criterion1).values()
             values = list(isalready)
-            print(values)
+           
             context  = {
                     "user_logged_in": request.session['user_logged_in'],
                     "userid": request.session['userid'],
@@ -234,11 +237,13 @@ def complaint(request):
         for user in staff_users:
             complaints_count[user.userid] = Complaints.objects.filter(
                 assigniduserid=user.userid).count()
+        
         min_complaints = min(complaints_count.values())
         least_complaints_users = [
             userid for userid, count in complaints_count.items() if count == min_complaints]
         assigned_user_id = least_complaints_users[randint(
             0, len(least_complaints_users)-1)]
+        print(assigned_user_id)
         assigned_user = User.objects.get(email=assigned_user_id)
    
         # complaint.save()

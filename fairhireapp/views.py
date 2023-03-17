@@ -141,7 +141,11 @@ def complain_details(request, id):
 
 
     }
-    return render(request, 'user_complain_details.html', {'context': context, 'data': data})
+
+    if request.session['loggedin_user'] == "User":
+        return render(request, 'my_complain_details.html', {'context': context, 'data': data})
+    else: 
+        return render(request, 'user_complain_details.html', {'context': context, 'data': data})
 
 
 # --------------------------------------------------------------------------------

@@ -17,6 +17,7 @@ urlpatterns = [
     path('laws',laws),
     path('registeruser',registeruser),
     path('logout', logout),
+    
     path('statistics', views.Statistics),
     path('complain_details/<int:id>',
          views.complain_details, name='complain_details'),

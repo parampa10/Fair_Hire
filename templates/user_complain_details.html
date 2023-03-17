@@ -71,6 +71,13 @@
                         <p style="margin-left: 20px;" class="card-text"><strong>State: </strong>{{ data.state }}</p>
                         <p style="margin-left: 20px;" class="card-text"><strong>Pincode: </strong>{{ data.pincode }}</p>
                         <p style="margin-left: 20px;" class="card-text"><strong>Date: </strong>{{ data.date }}</p>
+                        {% if data.status == "pending" %}
+                        <p style="margin-left: 20px;" class="card-text"><strong>Status: </strong>Pending</p>
+                          {% elif data.status == "in_process" %}
+                          <p style="margin-left: 20px;" class="card-text"><strong>Status: </strong>In Process</p>
+                          {% elif data.status == "resolved" %}
+                          <p style="margin-left: 20px;" class="card-text"><strong>Status: </strong>Resolved</p>
+                          {% endif %}
                         <p style="margin-left: 20px;" class="card-text"><strong>Status: </strong>{{ data.status }}</p>
                         <p style="margin-left: 20px;" class="card-text"><strong>Description: </strong>{{ data.description }}</p>
                         

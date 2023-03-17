@@ -52,11 +52,11 @@
                     <thead style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
                         <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
                           <td style=" width: 8%; font-size: 23px;">Index</td>  
-                          <td style=" width: 23%; font-size: 25px;">Company</td>
-                            <td style=" width: 23%; font-size: 25px;">Interviewee</td>
-                            <td style=" width: 23%; font-size: 25px;">Type of discrimination</td>
-                            <td style="text-align:end; width: 23%; font-size: 25px;">Status</td>
-                            
+                          <td style=" width: 20%; font-size: 25px;">Company</td>
+                            <td style=" width: 20%; font-size: 25px;">Interviewee</td>
+                            <td style=" width: 18%; font-size: 25px;">Type of discrimination</td>
+                            <td style="text-align:end; width: 16%; font-size: 25px;">Status</td>
+                            <td style="text-align:end; width: 18%; font-size: 25px;">Action</td>
                         </tr>
                     </thead>
 
@@ -67,10 +67,18 @@
                        
                       <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
                         <td style=" width: 8%;"> {{ forloop.counter }}</td>
-                          <td style=" width: 23%;">{{j.company}}</td>
-                          <td style=" width: 23%;">{{j.firstname}}</td>
-                          <td style=" width: 23%;">{{j.type_of_disability}}</td>
-                          <td style="text-align:end; width: 23%;"><span class="">{{j.status}}</span></td>
+                          <td style=" width: 20%;">{{j.company}}</td>
+                          <td style=" width: 20%;">{{j.firstname}}</td>
+                          <td style=" width: 18%;">{{j.type_of_disability}}</td>
+                          {% if j.status == "pending" %}
+                          <td style="text-align:end; width: 16%;"><span class="">Pending</span></td>
+                          {% elif j.status == "in_process" %}
+                          <td style="text-align:end; width: 16%;"><span class="">In Process</span></td>
+                          {% elif j.status == "resolved" %}
+                          <td style="text-align:end; width: 16%;"><span class="">Resolved</span></td>
+                          {% endif %}
+                          
+                          <td style="text-align:end; width: 18%;"><a href="{% url 'complain_details' id=j.id %}">View Details</a></td>
                       </tr>
                       {% endfor %}
                         

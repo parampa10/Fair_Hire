@@ -10,6 +10,13 @@ from rest_framework.decorators import api_view
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
+# Thigs we store in sessions = userid, user_logged_in, loggedin_user
+# if 'user_logged_in' in request.session:
+#             if (request.session['user_logged_in'] == "True"): 
+#                 pass
+#             else: 
+#                 return render(request,"login.html",{ "message" : message })
+            
 def logout(request):
     print(request.session['userid'])
     request.session['userid'] = ""
@@ -17,6 +24,7 @@ def logout(request):
     request.session['loggedin_user']=""
     return render(request,"login.html")
 from django.db.models import Count
+
 def login(request):
 
     # return render(request,"dashboard.html")
@@ -36,10 +44,9 @@ def login(request):
             return JsonResponse(message, safe=False)
         else:
             message = "login successful"
+
             request.session['userid'] = request.POST["userid"]
             request.session['user_logged_in'] = "True"
-            
-            # request.session['role'] = request.POST["userid"]
             user_role = values[0]["role"]
             fname=values[0]["fname"]
             request.session['fname'] = fname
@@ -232,6 +239,11 @@ def complaint(request):
 
     if request.method == 'POST':
         # complaint = Complaints.objects.get(pk=complaint_id)
+
+        criterion1 = Q(userid =  request.session['userid']) #any query you want
+        isalready = Complaints.objects.filter(criterion1).values()
+        values = list(isalready)
+         
         staff_users = User.objects.filter(role='Staff')
         complaints_count = {}
         for user in staff_users:
@@ -252,7 +264,7 @@ def complaint(request):
             firstname = request.POST["firstname"],
             lastname = request.POST["lastname"],
             mobile = request.POST["mobile"],
-            email = request.POST["email"],
+            email = values[0]["email"],
             type_of_disability = request.POST["type_of_disability"],
             description = request.POST["description"],
             company = request.POST["company"],

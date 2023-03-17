@@ -114,7 +114,14 @@
                                 <td style=" text-align:center;width: 15%;">{{j.company}}</td>
                                 <td style=" text-align:center;width: 15%;">{{j.firstname}}</td>
                                 <td style=" text-align:center;width: 25%;">{{j.type_of_disability}}</td>
-                                <td class="aboutstatus" style="display: none; width: 15%;">{{j.status}}</td>
+                                {% if j.status == "pending" %}
+                                <td class="aboutstatus" style="display: none; width: 15%;">Pending</td>
+                      {% elif j.status == "in_process" %}
+                      <td class="aboutstatus" style="display: none; width: 15%;">In Process</td>
+                      {% elif j.status == "resolved" %}
+                      <td class="aboutstatus" style="display: none; width: 15%;">Resolved</td>
+                      {% endif %}
+                                
                                 {% if context.role == "Admin" %}
                                         <td class="aboutstatustoadmin" style=" text-align:center;width: 15%;">{{j.status|upper}}</td>
                                         

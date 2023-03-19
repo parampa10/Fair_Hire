@@ -1,4 +1,6 @@
 from random import randint
+import random
+import string
 from django.http import JsonResponse
 from django.shortcuts import render
 # from product_analysis.models import Caps, Decoration, Material, Shape, platforms, user, files, Formats
@@ -145,7 +147,52 @@ def registeruser(request):
         
     if request.method == 'GET':
         return render(request,"registeruser.html",{ "message" : message })
+
+
+def forgot_password(request):
+    if request.method == 'GET':
+        
+        return render(request,"forgot_password.html",)
     
+    if request.method == 'POST':
+        email=request.POST["email"]
+
+        criterion1 = Q(userid =  request.POST["email"]) #any query you want
+        isalready = User.objects.filter(criterion1).values()
+        values = list(isalready)
+        if(len(values)==0):
+            message="The email you entered is not registered.Please check email."
+            return render(request,"forgot_password.html",{"message":message})
+
+        letters = string.ascii_lowercase
+        password = ''.join(random.choice(letters) for i in range(6))
+        message="Your Temporary Password is:\n"+password
+        
+        criterion1 = Q(userid =  request.POST["email"]) #any query you want
+        isalready_user = User.objects.get(criterion1)
+        isalready_user.password = password
+        isalready_user.save()
+
+        with get_connection(  
+            host=settings.EMAIL_HOST, 
+            port=settings.EMAIL_PORT,  
+            username=settings.EMAIL_HOST_USER, 
+            password=settings.EMAIL_HOST_PASSWORD, 
+            use_tls=settings.EMAIL_USE_TLS
+        ) as connection:  
+            subject = "Temporary Password for FairHire"
+            email_from = settings.EMAIL_HOST_USER  
+            recipient_list = [email, ]  
+            message = message 
+            EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()  
+
+        message_success="New password has been sent to your email account use that password and login again."
+        return render(request,"forgot_password.html",{"message_success":message_success})        
+
+
+
+
+
 def home(request): 
     if request.method == 'GET':
         # print(request.session['userid'])

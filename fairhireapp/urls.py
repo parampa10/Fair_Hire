@@ -3,7 +3,7 @@ from .views import chatbot
 from .views import change_status
 from .views import dashboard
 from . import views
-from fairhireapp.backend import login,complaint, home, about, laws, registeruser, logout, new_complaint
+from fairhireapp.backend import login,complaint, home, about, laws, registeruser, logout, new_complaint,forgot_password
 # from product_analysis.apidata import complaint, home,login, signup, customize, save, toedit, edit, show_files,data,show_product, show_all_product, delete, getCardData, formSave
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('login',login),
     path('complaint',complaint),
     path('new_complaint',new_complaint),
+    path('forgot_password',forgot_password),
     path('complain_status/<int:pk>', change_status, name='change_status'),
     path('about',about),
     path('laws',laws),

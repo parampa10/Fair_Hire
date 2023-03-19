@@ -134,6 +134,10 @@ def registeruser(request):
         values = list(isalready)
         if(len(values)==0):
 
+            #otp process
+            
+
+
             data_to_add = User(
             userid = request.POST["email"],
             password = request.POST["password"],

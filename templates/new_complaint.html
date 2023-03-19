@@ -53,15 +53,16 @@
             
 
           
-          <form id="contactForm" action="complaint" method="post">
+          <form  id="contactForm" action="complaint" method="post">
             <!-- Name input-->
             {% csrf_token %}
             <div class="">
-              <label for="firstname">First name</label>
+              <label class="" for="firstname">First name</label>
               <input class="form-control" id="firstname" name="firstname" type="text" placeholder="Enter your Firstname..." />
               
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">Firstname is required.</div> -->
             </div>
+            <br>
 
             <div class="">
               <label for="name">Last name</label>
@@ -71,6 +72,8 @@
               <!-- <div class="invalid-feedback" data-sb-feedback="lastname:required">Lastname is required.</div> -->
             </div>
 
+            <br>
+
             <div class="">
               <label for="name">Mobile No.</label>
               <input class="form-control" id="mobile" name="mobile" type="text" placeholder="Enter your Mobile No..."
@@ -78,10 +81,11 @@
              
               <!-- <div class="invalid-feedback" data-sb-feedback="mobile:required">A mobile is required.</div> -->
             </div>
+            <br>
 
             <div class="">
               <label for="type_of_disability">Type of Discrimination</label>
-              
+              <br>
               <select name="type_of_disability" >
                 <option value="Age discrimination">Age discrimination</option>
                 <option value="Race discrimination">Race discrimination</option>
@@ -102,6 +106,8 @@
             </select>
               <!-- <div class="invalid-feedback" data-sb-feedback="type_of_disability:required">A type_of_disability is required.</div> -->
             </div>
+            <br>
+
 
             <div class="">
               <label for="name">Company</label>
@@ -110,6 +116,7 @@
              
               <!-- <div class="invalid-feedback" data-sb-feedback="company:required">A company is required.</div> -->
             </div>
+            <br>
 
             <div class="">
               <label for="name">City</label>
@@ -118,6 +125,7 @@
               
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A city is required.</div> -->
             </div>
+            <br>
 
             <div class="">
               <label for="name">State</label>
@@ -126,6 +134,7 @@
               
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A state is required.</div> -->
             </div>
+            <br>
 
             <div class="">
               <label for="name">Pincode</label>
@@ -134,6 +143,7 @@
              
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A pincode is required.</div> -->
             </div>
+            <br>
             <!-- Email address input-->
           
             <!-- Phone number input-->
@@ -144,6 +154,7 @@
               
               <!-- <div class="invalid-feedback" data-sb-feedback="phone:required">A date number is required.</div> -->
             </div>
+            <br>
             <!-- Message input-->
             <div class="">
               <label for="message">Description</label>
@@ -152,6 +163,7 @@
               
               <!-- <div class="invalid-feedback" data-sb-feedback="message:required">A description is required.</div> -->
             </div>
+            <br>
             <!-- Submit success message-->
             <!---->
             <!-- This is what your users will see when the form-->

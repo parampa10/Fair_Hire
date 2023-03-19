@@ -139,11 +139,11 @@
 
                                         <label for="status"></label>
                                         <select name="status" class="status" data-complaint-id="{{ j.id }}">
-                                            <option value="resolved" {% if j.status == "resolved" %}selected {%endif%}>resolved</option>
+                                            <option value="resolved" {% if j.status == "resolved" %}selected {% endif %}>resolved</option>
                                            
-                                            <option value="in_process"{% if j.status == "in_process" %}selected {%endif%}>In Process</option>
+                                            <option value="in_process"{% if j.status == "in_process" %}selected {% endif %}>In Process</option>
                                        
-                                            <option value="pending" {% if j.status == "pending" %}selected {%endif%}>Pending</option>
+                                            <option value="pending" {% if j.status == "pending" %}selected {% endif%}>Pending</option>
                                     
                                         </select>
                                         </form>
@@ -234,8 +234,43 @@ list.forEach((item) => item.addEventListener("mouseover", activeLink));
 
             
             $('table tbody tr').each(function () {
-                
-                if (status === 'all') {
+                if("{{context.role|safe}}"=="Staff"){
+                    console.log("Staff");
+                    if (status === 'all') {
+                    $(this).show();
+                } else {
+                    console.log(this); 
+                    
+                    var adminstatus = $(this).find('.status').val();
+                    
+                //     if(adminstatus == "Pending"){
+                //         adminstatus = "pending";
+                // }
+                // else if(adminstatus == "In Process"){
+                //     adminstatus = "in_process";
+                // }
+                // else{
+                //     adminstatus = "resolved";
+                // }
+                console.log(adminstatus);
+                console.log(status);
+           
+                    // console.log(adminstatus)
+
+                    if(adminstatus==status)
+                    {      
+                        console.log("Hello");
+                        $(this).show();
+                    } else {
+                    $(this).hide();
+                    }
+
+                    
+            }
+                }
+                else{
+                    console.log("Admin");
+                    if (status === 'all') {
                     $(this).show();
                 } else {
                     console.log(this); 
@@ -249,18 +284,24 @@ list.forEach((item) => item.addEventListener("mouseover", activeLink));
                 else{
                     rowStatus = "resolved";
                 }
-                    var adminstatus = $(this).find('.aboutstatustoadmin').text().toLowerCase();
-                       
+                    
+
+                console.log(status);
+               
                     // console.log(adminstatus)
 
                     if (rowStatus == status) {
                         $(this).show();
-                    }else if(adminstatus==status)
-                    {         $(this).show();
                     } else {
                     $(this).hide();
                     }
+
+                    
             }
+                }
+                
+                
+             
             });
         }
   </script>

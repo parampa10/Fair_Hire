@@ -56,80 +56,100 @@
           <form id="contactForm" action="complaint" method="post">
             <!-- Name input-->
             {% csrf_token %}
-            <div class="form-floating mb-3">
-              <input class="form-control" id="firstname" name="firstname" type="text" placeholder="Enter your Firstname..." />
+            <div class="">
               <label for="firstname">First name</label>
+              <input class="form-control" id="firstname" name="firstname" type="text" placeholder="Enter your Firstname..." />
+              
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">Firstname is required.</div> -->
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="name">Last name</label>
               <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Enter your Lastname..."
               />
-              <label for="name">Last name</label>
+              
               <!-- <div class="invalid-feedback" data-sb-feedback="lastname:required">Lastname is required.</div> -->
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="name">Mobile No.</label>
               <input class="form-control" id="mobile" name="mobile" type="text" placeholder="Enter your Mobile No..."
                 />
-              <label for="name">Mobile No.</label>
+             
               <!-- <div class="invalid-feedback" data-sb-feedback="mobile:required">A mobile is required.</div> -->
             </div>
 
-            <div class="form-floating mb-3">
-              <input class="form-control" id="type_of_disability" name="type_of_disability" type="text" placeholder="S"
-                />
-              <label for="name">Type of Disability</label>
+            <div class="">
+              <label for="type_of_disability">Type of Discrimination</label>
+              
+              <select name="type_of_disability" >
+                <option value="Age discrimination">Age discrimination</option>
+                <option value="Race discrimination">Race discrimination</option>
+                <option value="Gender discrimination">Gender discrimination</option>
+                <option value="Disability discrimination">Disability discrimination</option>
+                <option value="Religious discrimination">Religious discrimination</option>
+                <option value="National origin discrimination">National origin discrimination</option>
+                <option value="Pregnancy discrimination">Pregnancy discrimination</option>
+                <option value="Sexual harassment">Sexual harassment</option>
+                <option value="Weight discrimination">Weight discrimination</option>
+                <option value="Socioeconomic discrimination">Socioeconomic discrimination</option>
+                <option value="Language discrimination">Language discrimination</option>
+                <option value="Political discrimination">Political discrimination</option>
+                <option value="Educational discrimination">Educational discrimination</option>
+                <option value="Genetic discrimination">Genetic discrimination</option>
+                <option value="Intersectional discrimination">Intersectional discrimination</option>
+                <option value="Appearance discrimination">Appearance discrimination</option>
+            </select>
               <!-- <div class="invalid-feedback" data-sb-feedback="type_of_disability:required">A type_of_disability is required.</div> -->
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="name">Company</label>
               <input class="form-control" id="company" name="company" type="text" placeholder="Enter Company Name..."
               />
-              <label for="name">Company</label>
+             
               <!-- <div class="invalid-feedback" data-sb-feedback="company:required">A company is required.</div> -->
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="name">City</label>
               <input class="form-control" id="city" name="city" type="text" placeholder="Enter City..."
                 data-sb-validations="required" />
-              <label for="name">City</label>
+              
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A city is required.</div> -->
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="name">State</label>
               <input class="form-control" id="state" name="state" type="text" placeholder="Enter State..."
                 />
-              <label for="name">State</label>
+              
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A state is required.</div> -->
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="name">Pincode</label>
               <input class="form-control" id="pincode" name="pincode" type="text" placeholder="Enter Pincode..."
                />
-              <label for="name">Pincode</label>
+             
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A pincode is required.</div> -->
             </div>
             <!-- Email address input-->
-            <div class="form-floating mb-3">
-              <input class="form-control" id="email" name="email" type="email" placeholder="Enter your Email Address"
-                 />
-              <label for="email">Email Address</label>
-              <!-- <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div> -->
-              <!-- <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div> -->
-            </div>
+          
             <!-- Phone number input-->
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="phone">Date</label>
               <input class="form-control" id="date" name="date" 
                 />
-              <label for="phone">Date</label>
+              
               <!-- <div class="invalid-feedback" data-sb-feedback="phone:required">A date number is required.</div> -->
             </div>
             <!-- Message input-->
-            <div class="form-floating mb-3">
+            <div class="">
+              <label for="message">Description</label>
               <textarea class="form-control" id="description" name="description" type="text" placeholder="Enter the description..."
                 style="height: 10rem" ></textarea>
-              <label for="message">Description</label>
+              
               <!-- <div class="invalid-feedback" data-sb-feedback="message:required">A description is required.</div> -->
             </div>
             <!-- Submit success message-->

@@ -37,7 +37,7 @@ body {
   width: 300px;
   height: 100%;
   background: var(--blue);
-  border-left: 10px solid var(--blue);
+  /* border-left: 10px solid var(--blue); */
   transition: 0.5s;
   overflow: hidden;
 }
@@ -60,10 +60,6 @@ body {
   border-bottom-left-radius: 30px;
 }
 
-.navigation ul li:hover,
-.navigation ul li.hovered {
-  background-color: var(--white);
-}
 
 .navigation ul li:nth-child(1) {
   margin-bottom: 40px;
@@ -80,7 +76,7 @@ body {
 }
 .navigation ul li:hover a,
 .navigation ul li.hovered a {
-  color: var(--blue);
+  color: #2c3e50;
 }
 
 .navigation ul li a .icon {
@@ -104,35 +100,6 @@ body {
   text-align: start;
   white-space: nowrap;
 }
-
-/* --------- curve outside ---------- */
-.navigation ul li:hover a::before,
-.navigation ul li.hovered a::before {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: -50px;
-  width: 50px;
-  height: 50px;
-  background-color: transparent;
-  border-radius: 50%;
-  box-shadow: 35px 35px 0 10px var(--white);
-  pointer-events: none;
-}
-.navigation ul li:hover a::after,
-.navigation ul li.hovered a::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: -50px;
-  width: 50px;
-  height: 50px;
-  background-color: transparent;
-  border-radius: 50%;
-  box-shadow: 35px -35px 0 10px var(--white);
-  pointer-events: none;
-}
-
 /* ===================== Main ===================== */
 .main {
   position: absolute;
@@ -491,7 +458,7 @@ body {
 input[type="text"],input[type="password"] {
   background: none;
   border: none;
-  border-bottom: solid 1px #fff;
+  border-bottom: solid 1px black;
   outline: none;
 }
 
@@ -2949,7 +2916,7 @@ progress {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  border-radius: 0.5rem;
+
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {

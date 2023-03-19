@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseBadRequest
 from datetime import datetime
 from random import randint
-
+from fairhireapp.backend import userloggedin
 # from django.views.generic import TemplateView
 from django.db.models import Count
 # from .models import PasswordReset
@@ -89,150 +89,167 @@ def dashboard(request):
     # values = Complaints.objects.all().order_by('date')
     # isalready = Complaints.objects.filter().values()
     # values = list(isalready)
-    role = request.session['loggedin_user']
-    userid = request.session['userid']
-    fname = request.session['fname']
-    if role == 'Staff':
-        isalready = Complaints.objects.filter(assigniduserid=userid).values()
-        values = list(isalready)
-        complain_count = Complaints.objects.filter(
-            assigniduserid=userid).count()
-        resolved_count = Complaints.objects.filter(
-            assigniduserid=userid, status='resolved').count()
-        pending_count = Complaints.objects.filter(
-            assigniduserid=userid, status='pending').count()
-        in_progress_count = Complaints.objects.filter(
-            assigniduserid=userid, status='in_process').count()
-    else:
-        isalready = Complaints.objects.all()
-        values = list(isalready)
+    logged_user_details = userloggedin(request)
+    if(logged_user_details["userid"] == "" or logged_user_details["loggedin_user"] == "User"):
+        return render(request,"login.html")
+    else: 
+        role = request.session['loggedin_user']
+        userid = request.session['userid']
+        fname = request.session['fname']
+        if role == 'Staff':
+            isalready = Complaints.objects.filter(assigniduserid=userid).values()
+            values = list(isalready)
+            complain_count = Complaints.objects.filter(
+                assigniduserid=userid).count()
+            resolved_count = Complaints.objects.filter(
+                assigniduserid=userid, status='resolved').count()
+            pending_count = Complaints.objects.filter(
+                assigniduserid=userid, status='pending').count()
+            in_progress_count = Complaints.objects.filter(
+                assigniduserid=userid, status='in_process').count()
+        else:
+            isalready = Complaints.objects.all()
+            values = list(isalready)
 
-        complain_count = Complaints.objects.all().count()
-        resolved_count = Complaints.objects.filter(
-            status='resolved').count()
-        pending_count = Complaints.objects.filter(
-            status='pending').count()
-        in_progress_count = Complaints.objects.filter(
-            status='in_process').count()
+            complain_count = Complaints.objects.all().count()
+            resolved_count = Complaints.objects.filter(
+                status='resolved').count()
+            pending_count = Complaints.objects.filter(
+                status='pending').count()
+            in_progress_count = Complaints.objects.filter(
+                status='in_process').count()
 
-    context = {
-        "test": "Success",
-        "user_logged_in": "True",
-        "user_role": "admin",
-        "complaints": values,
-        "c_count": complain_count,
-        "r_count": resolved_count,
-        "p_count": pending_count,
-        "ip_count": in_progress_count,
-        "role": role,
-        "fname": fname
-    }
-    # return JsonResponse({"context": context})
-    return render(request, "dashboard.html", {"context": context})
+        context = {
+            "test": "Success",
+            "user_logged_in": "True",
+            "user_role": "admin",
+            "complaints": values,
+            "c_count": complain_count,
+            "r_count": resolved_count,
+            "p_count": pending_count,
+            "ip_count": in_progress_count,
+            "role": role,
+            "fname": fname
+        }
+        # return JsonResponse({"context": context})
+        return render(request, "dashboard.html", {"context": context})
 
 
 def complain_details(request, id):
-    data = Complaints.objects.get(id=id)
-
-    context = {
-        "user_logged_in": request.session['user_logged_in'],
-        "userid": request.session['userid'],
-        "role": request.session['loggedin_user']
-
-
-    }
-
-    if request.session['loggedin_user'] == "User":
-        return render(request, 'my_complain_details.html', {'context': context, 'data': data})
+    logged_user_details = userloggedin(request)
+    if(logged_user_details["userid"] == ""):
+        return render(request,"login.html")
     else: 
-        return render(request, 'user_complain_details.html', {'context': context, 'data': data})
+        data = Complaints.objects.get(id=id)
+
+        context = {
+            "user_logged_in": request.session['user_logged_in'],
+            "userid": request.session['userid'],
+            "role": request.session['loggedin_user']
+
+
+        }
+
+        if request.session['loggedin_user'] == "User":
+            return render(request, 'my_complain_details.html', {'context': context, 'data': data})
+        else: 
+            return render(request, 'user_complain_details.html', {'context': context, 'data': data})
 
 
 # --------------------------------------------------------------------------------
 # rom django.shortcuts import render, redirect
 def Statistics(request):
-    city_counts = Complaints.objects.values(
-        'city').order_by().annotate(count=Count('city'))
-    cities = [city_count['city'] for city_count in city_counts]
-    object_counts = [city_count['count'] for city_count in city_counts]
+    logged_user_details = userloggedin(request)
+    if(logged_user_details["userid"] == "" or logged_user_details["loggedin_user"] == "User"):
+        return render(request,"login.html")
+    else: 
+        city_counts = Complaints.objects.values(
+            'city').order_by().annotate(count=Count('city'))
+        cities = [city_count['city'] for city_count in city_counts]
+        object_counts = [city_count['count'] for city_count in city_counts]
 
-    state_counts = Complaints.objects.values(
-        'state').order_by().annotate(count=Count('state'))
-    states = [state_count['state'] for state_count in state_counts]
-    state_counts = [state_count['count'] for state_count in state_counts]
+        state_counts = Complaints.objects.values(
+            'state').order_by().annotate(count=Count('state'))
+        states = [state_count['state'] for state_count in state_counts]
+        state_counts = [state_count['count'] for state_count in state_counts]
 
-    company_counts = Complaints.objects.values(
-        'company').order_by().annotate(count=Count('company'))
-    companies = [company_count['company']
-                 for company_count in company_counts]
-    company_counts = [company_count['count']
-                      for company_count in company_counts]
-    status_counts = Complaints.objects.values(
-        'status').order_by().annotate(count=Count('status'))
-    status = [status_counts['status'] for status_counts in status_counts]
-    status_counts = [status_counts['count']
-                     for status_counts in status_counts]
-    role = request.session['loggedin_user']
-    context = {
-        "test": "Success",
-        "user_logged_in": "True",
-        "role": role,
-        'cities': cities,
-        'object_counts': object_counts,
-        'states': states,
-        'state_counts': state_counts,
-        'companies': companies,
-        'company_counts': company_counts,
-        "status": status,
-        'status_counts': status_counts
-    }
-    # print(context)
-    return render(request, 'statistics.html', {"context": context})
+        company_counts = Complaints.objects.values(
+            'company').order_by().annotate(count=Count('company'))
+        companies = [company_count['company']
+                    for company_count in company_counts]
+        company_counts = [company_count['count']
+                        for company_count in company_counts]
+        status_counts = Complaints.objects.values(
+            'status').order_by().annotate(count=Count('status'))
+        status = [status_counts['status'] for status_counts in status_counts]
+        status_counts = [status_counts['count']
+                        for status_counts in status_counts]
+        role = request.session['loggedin_user']
+        context = {
+            "test": "Success",
+            "user_logged_in": "True",
+            "role": role,
+            'cities': cities,
+            'object_counts': object_counts,
+            'states': states,
+            'state_counts': state_counts,
+            'companies': companies,
+            'company_counts': company_counts,
+            "status": status,
+            'status_counts': status_counts
+        }
+        # print(context)
+        return render(request, 'statistics.html', {"context": context})
 
 
 def newuser(request):
 
-    message = ""
+    logged_user_details = userloggedin(request)
+    print(logged_user_details["loggedin_user"])
+    if(logged_user_details["userid"] == "" or logged_user_details["loggedin_user"] != "Admin"):
+        return render(request,"login.html")
+    else: 
+        message = ""
 
-    if request.method == 'POST':
-        role = request.session['loggedin_user']
-        criterion1 = Q(userid=request.POST["email"])  # any query you want
-        isalready = User.objects.filter(criterion1).values()
-        values = list(isalready)
-
-        if(len(values) == 0):
-
-            print(request.POST['role'])
-
-            data_to_add = User(
-                userid=request.POST["email"],
-                password=request.POST["password"],
-                role=request.POST['role'],
-                email=request.POST["email"],
-                fname=request.POST["fname"],
-                lname=request.POST["lname"]
-
-            )
-
-            data_to_add.save()
-            context = {
-                "message": "Registration Successful",
-                "role": role
-            }
-            return render(request, "newuser.html", {"context": context})
-
-        else:
-            message = "This user is already registered"
-            return JsonResponse(message, safe=False)
-
-    if request.method == 'GET':
-        if 'user_logged_in' in request.session:
+        if request.method == 'POST':
             role = request.session['loggedin_user']
-            context = {
-                "user_logged_in":  request.session['user_logged_in'],
-                "role": role
-            }
-            return render(request, "newuser.html", {"context": context})
+            criterion1 = Q(userid=request.POST["email"])  # any query you want
+            isalready = User.objects.filter(criterion1).values()
+            values = list(isalready)
+
+            if(len(values) == 0):
+
+                print(request.POST['role'])
+
+                data_to_add = User(
+                    userid=request.POST["email"],
+                    password=request.POST["password"],
+                    role=request.POST['role'],
+                    email=request.POST["email"],
+                    fname=request.POST["fname"],
+                    lname=request.POST["lname"]
+
+                )
+
+                data_to_add.save()
+                context = {
+                    "message": "Registration Successful",
+                    "role": role
+                }
+                return render(request, "newuser.html", {"context": context})
+
+            else:
+                message = "This user is already registered"
+                return JsonResponse(message, safe=False)
+
+        if request.method == 'GET':
+            if 'user_logged_in' in request.session:
+                role = request.session['loggedin_user']
+                context = {
+                    "user_logged_in":  request.session['user_logged_in'],
+                    "role": role
+                }
+                return render(request, "newuser.html", {"context": context})
 
 #chat_perpose
 

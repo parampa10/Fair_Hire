@@ -21,7 +21,17 @@ from django.core.mail import EmailMessage, get_connection
 #                 pass
 #             else: 
 #                 return render(request,"login.html",{ "message" : message })
+def userloggedin(request):
+    
+    if 'userid' in request.session:
             
+            if (request.session['userid'] != ""): 
+                return {"userid": request.session['userid'], "loggedin_user": request.session['loggedin_user']}
+            else: 
+                return {"userid":""}
+    else:
+        return {"userid":""}
+
 def logout(request):
     print(request.session['userid'])
     request.session['userid'] = ""
@@ -251,51 +261,42 @@ def about(request):
 
 def new_complaint(request): 
     if request.method == 'GET':
-        message = "WELCOME TO HOMEPAGE"
-        if 'user_logged_in' in request.session:
-            role = request.session['loggedin_user']
 
-            
+        logged_user_details = userloggedin(request)
+        if(logged_user_details["userid"] == ""):
+            return render(request,"login.html")
+        else: 
             context  = {
                     "user_logged_in": request.session['user_logged_in'],
-                    "userid": request.session['userid'],
-                    'role': role
+                    "userid": logged_user_details["userid"],
+                    'role': logged_user_details["loggedin_user"]
             }
             return render(request,"new_complaint.html",{ "context" : context })
-        else:
-
-            message = "WELCOME TO HOMEPAGE"
-            return render(request,"new_complaint.html",{ "message" : message })
+        
 
 
 def complaint(request): 
     if request.method == 'GET':
-        message = "WELCOME TO HOMEPAGE"
-        if 'user_logged_in' in request.session:
+        logged_user_details = userloggedin(request)
+        if(logged_user_details["userid"] == ""):
+            return render(request,"login.html")
+        else: 
             
-            criterion1 = Q(userid =  request.session['userid']) #any query you want
+            criterion1 = Q(userid =  logged_user_details['userid']) #any query you want
             isalready = Complaints.objects.filter(criterion1).values()
             values = list(isalready)
-           
+            
             context  = {
                     "user_logged_in": request.session['user_logged_in'],
-                    "userid": request.session['userid'],
+                    "userid": logged_user_details['userid'],
                     "complaints":values
             }
             return render(request,"complaint.html",{ "context" : context })
-        else:
-
-            message = "WELCOME TO HOMEPAGE"
-            return render(request,"complaint.html",{ "message" : message })
         
 
     if request.method == 'POST':
         # complaint = Complaints.objects.get(pk=complaint_id)
-
-        criterion1 = Q(userid =  request.session['userid']) #any query you want
-        isalready = Complaints.objects.filter(criterion1).values()
-        values = list(isalready)
-         
+        
         staff_users = User.objects.filter(role='Staff')
         complaints_count = {}
         for user in staff_users:
@@ -316,7 +317,7 @@ def complaint(request):
             firstname = request.POST["firstname"],
             lastname = request.POST["lastname"],
             mobile = request.POST["mobile"],
-            email = request.POST["email"],
+            email = request.session['userid'],
             type_of_disability = request.POST["type_of_disability"],
             description = request.POST["description"],
             company = request.POST["company"],
@@ -350,7 +351,7 @@ def complaint(request):
 ##email confirmation fucntion
 def send_email(request):
 
-    email=request.POST["email"]
+    email=request.session['userid']
     type_of_disability = request.POST["type_of_disability"]
     company = request.POST["company"]
     date = request.POST["date"]

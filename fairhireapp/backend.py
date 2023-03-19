@@ -99,7 +99,6 @@ def login(request):
                 }
             
                 return redirect("/dashboard",context)
-                return render(request,"dashboard.html",{"context": context})
 
             else: 
                 request.session['loggedin_user'] = "User"

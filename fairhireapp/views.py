@@ -44,11 +44,11 @@ def chatbot(request):
         print("user:", message)
         # print("in2")
         # prompt = message
-        prompt = f"give me brief answer related dicrimination {message} \n"
+        prompt = f"give me answer related dicrimination in canada for the question: '{message}' \n"
         response = openai.Completion.create(
             engine=model_engine,
             prompt=prompt,
-            max_tokens=50,
+            max_tokens=2000,
             n=1,
             stop=None,
             temperature=0.7,

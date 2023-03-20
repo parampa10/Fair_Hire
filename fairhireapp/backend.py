@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
-
+from smtplib import SMTPException
 from django.core.mail import EmailMessage, get_connection
 
 # Thigs we store in sessions = userid, user_logged_in, loggedin_user
@@ -289,7 +289,7 @@ def complaint(request):
                 "user_logged_in": request.session['user_logged_in'],
                 "userid": logged_user_details['userid'],
                 "complaints": values,
-                'message':False,
+                'message':"False",
                 'role':role
             }
             return render(request, "complaint.html", {"context": context})
@@ -366,20 +366,22 @@ def send_email(request):
     date = request.POST["date"]
     message = "This email is to notify you that the compaint of "+type_of_disability + \
         " you filed against the company "+company+" has been filed on date "+date+".\n"
-
+    
     if request.method == "POST":
-        with get_connection(
-            host = settings.EMAIL_HOST,
-            port = settings.EMAIL_PORT,
-            username = settings.EMAIL_HOST_USER,
-            password = settings.EMAIL_HOST_PASSWORD,
-            use_tls = settings.EMAIL_USE_TLS
-        ) as connection:
-            subject="Complaint confirmation."
-            email_from=settings.EMAIL_HOST_USER
-            recipient_list=[email, ]
-            message=message
-            EmailMessage(subject, message, email_from,
-                         recipient_list, connection = connection).send()
-
-    return render(request, 'home.html')
+        try:
+            with get_connection(
+                host=settings.EMAIL_HOST,
+                port=settings.EMAIL_PORT,
+                username=settings.EMAIL_HOST_USER,
+                password=settings.EMAIL_HOST_PASSWORD,
+                use_tls=settings.EMAIL_USE_TLS
+            ) as connection:
+                subject = "Complaint confirmation."
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email, ]
+                message = message
+                EmailMessage(subject, message, email_from,
+                             recipient_list, connection=connection).send()
+        except SMTPException:
+            return JsonResponse({'messages': "Please try after some time"})
+    return render(request,'home.html')

@@ -26,7 +26,25 @@
     <div class="container"
         style="display: flex; justify-content: space-between; padding: 0px; margin: 0px; width: 100%;">
 
-        {% include "sidemenu.html" %}
+        <div class="navigation " style="padding: 0px; margin: 0px; background-color: #1abc9c; ">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+        
+                        </span>
+                        <h2 class="title">Fair Hire</h2>
+                    </a>
+                </li>
+        
+                <li>
+                    <a href="chat_staff">
+                        <h4 id="dashboard-link">Dashboard</h4>
+                    </a>
+                </li>
+              
+            </ul>
+        </div>
 
         <!-- ========================= Main ==================== -->
         <div class="main" style="padding-top: 3%;" style="width: 90% !important;">
@@ -38,13 +56,7 @@
                     <div style="width: 100%;">
                         <h2>chat</h2>
                     </div>
-                    <div class="btn-group" role="group"
-                        style="height: 50px; width: 100%; margin-top: 20px; margin-bottom: 20px;">
-                        <button type="button" class="btn btn-outline-primary" id="filter-all">All</button>
-                        <button type="button" class="btn btn-outline-primary" id="filter-resolved">Resolved</button>
-                        <button type="button" class="btn btn-outline-primary" id="filter-in-process">In Process</button>
-                        <button type="button" class="btn btn-outline-primary" id="filter-pending">Pending</button>
-                    </div>
+                    
                     <table class="border">
 
                         <thead
@@ -97,76 +109,10 @@
 <script>
 
 
-    // add hovered class to selected list item
-    let list = document.querySelectorAll(".navigation li");
-
-    function activeLink() {
-        list.forEach((item) => {
-            item.classList.remove("hovered");
-        });
-        this.classList.add("hovered");
-    }
-
-    list.forEach((item) => item.addEventListener("mouseover", activeLink));
-
-    $(".status").change(function (e) {
-        // Get the selected value and the complaint id from the data attribute
-        var status = $(this).val();
-        var complaint_id = $(this).data("complaint-id");
-        e.preventDefault()
-        console.log(complaint_id)
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'change_status' pk=0 %}".replace('0', parseInt(complaint_id)),
-            data: {
-                "status": status,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-            },
-            success: function (data) {
-                console.log(data)
-                var status_td = $("#status").parent();
-                status_td.text(status);
-                // Clear the chat input field
-                // location.reload();
-
-            }
-        })
-
-    })
-    $(document).ready(function () {
-        // Attach click handlers to filter buttons
-        $('#filter-all').on('click', function () {
-            filterTable('all');
-        });
-        $('#filter-resolved').on('click', function () {
-            filterTable('resolved');
-        });
-        $('#filter-in-process').on('click', function () {
-            filterTable('in_process');
-        });
-        $('#filter-pending').on('click', function () {
-            filterTable('pending');
-        });
-    });
-
-    function filterTable(status) {
-        $('table tbody tr').each(function () {
-            if (status === 'all') {
-                $(this).show();
-            } else {
-                var rowStatus = $(this).find('.aboutstatus').text();
-                var adminstatus = $(this).find('.aboutstatustoadmin').text().toLowerCase();
-                console.log(adminstatus)
-
-                if (rowStatus == status) {
-                    $(this).show();
-                } else if (adminstatus == status) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            }
-        });
+   
+        console.log(window.location.pathname);
+        if(window.location.pathname == "/chat_staff"){
+            document.getElementById("dashboard-link").style.color = "#2c3e50";
     }
 </script>
 </script>

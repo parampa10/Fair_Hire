@@ -35,7 +35,7 @@
 
         <!-- ========================= Main ==================== -->
         <div class="main" style="padding-top: 3%;" style="width: 90% !important; ">
-            {% if context.role == "Admin" %}
+            {% if context.role == "Admin" or context.role == "Staff" %}
             <!-- ======================= Cards ================== -->
             <div class="cardBox" style="width: 100%; margin-top: 50px; ">
                 <div class="card">

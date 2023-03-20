@@ -48,7 +48,7 @@ def chatbot(request):
         response = openai.Completion.create(
             engine=model_engine,
             prompt=prompt,
-            max_tokens=2000,
+            max_tokens=100,
             n=1,
             stop=None,
             temperature=0.7,
@@ -348,22 +348,31 @@ def get_messages(request, id):
     role = request.session.get('loggedin_user')
     
     try:
-        print("fuck")
+    
         print(ChatRoom.objects.get(id=id))
         chat_room = ChatRoom.objects.get(id=id)
+        
+
+        current_position = ChatRoom.objects.filter(
+            assigned_to=chat_room.assigned_to,
+            created_at__lt=chat_room.created_at).count()
+
+        
     except ChatRoom.DoesNotExist:
         messages = [{'sender': " From Other Side ", 'message': "chat closed"}]
         print(messages)
-        return JsonResponse({'messages':list(messages)})
-        return redirect('chat_staff' if role == 'chat_staff' else '/')
+        return JsonResponse({'messages': list(messages), 'role': role})
+        #    return redirect('chat_staff' if role == 'chat_staff' else '/')
         # if role == "User":
         #     return redirect('')
         # elif role == "chat_staff":
         #     return redirect('chat_staff')
+        
+    
     messages = ChatMessage.objects.filter(
         chat_room=chat_room).values('sender', 'message')
-    print(messages)
-    return JsonResponse({'messages': list(messages)})
+    print(current_position)
+    return JsonResponse({'messages': list(messages),'role':role,'current_position':current_position})
 
 
 def resolved_chat(request, id):

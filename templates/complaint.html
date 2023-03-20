@@ -25,76 +25,55 @@
   {% include "header.html" %}
   
   <!-- Masthead-->
-
+  
   <!-- About Section-->
   <!-- <section class="page-section bg-primary text-white mb-0 " id="about"> -->
   <!-- Contact Section-->
-  <section class="page-section"  style="margin-top: 100px;">
-    <div class="container">
-      <!-- Contact Section Heading-->
-     
-      <!-- Contact Section Form-->
-      <div class="row justify-content-center">
-        <div class="">
-          <!-- * * * * * * * * * * * * * * *-->
-          <!-- * * SB Forms Contact Form * *-->
-          <!-- * * * * * * * * * * * * * * *-->
-          <!-- This form is pre-integrated with SB Forms.-->
-          <!-- To make this form functional, sign up at-->
-          <!-- https://startbootstrap.com/solution/contact-forms-->
-          <!-- to get an API token!-->
-                <div class="cardHeader" style="display: flex; width: 100%; justify-content: space-between; margin-bottom: 50px;">
-                    <h2>Recent Complaints</h2>
-                    <a href="new_complaint" class="btn">Add New</a>
-                </div>
-
-                <table style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-                    <thead style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
-                        <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-                          <td style=" width: 8%; font-size: 23px;">Index</td>  
-                          <td style=" width: 20%; font-size: 25px;">Company</td>
-                            <td style=" width: 20%; font-size: 25px;">Interviewee</td>
-                            <td style=" width: 18%; font-size: 25px;">Type of discrimination</td>
-                            <td style="text-align:end; width: 16%; font-size: 25px;">Status</td>
-                            <td style="text-align:end; width: 18%; font-size: 25px;">Action</td>
-                        </tr>
-                    </thead>
-
-                    <tbody style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-
-                      {% for j in context.complaints %}
-                        
-                       
-                      <tr style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-                        <td style=" width: 8%;"> {{ forloop.counter }}</td>
-                          <td style=" width: 20%;">{{j.company}}</td>
-                          <td style=" width: 20%;">{{j.firstname}}</td>
-                          <td style=" width: 18%;">{{j.type_of_disability}}</td>
-                          {% if j.status == "pending" %}
-                          <td style="text-align:end; width: 16%;"><span class="">Pending</span></td>
-                          {% elif j.status == "in_process" %}
-                          <td style="text-align:end; width: 16%;"><span class="">In Process</span></td>
-                          {% elif j.status == "resolved" %}
-                          <td style="text-align:end; width: 16%;"><span class="">Resolved</span></td>
-                          {% endif %}
-                          
-                          <td style="text-align:end; width: 18%;"><a href="{% url 'complain_details' id=j.id %}">View Details</a></td>
-                      </tr>
-                      {% endfor %}
-                        
-                    </tbody>
-                </table>
-            </div>
-
-            
-
-          
-          
+<section class="page-section mt-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Recent Complaints</h2>
+          <a href="new_complaint" class="btn btn-primary">Add New</a>
         </div>
+        <table class="table table-striped table-responsive-md">
+          <thead>
+            <tr>
+              <th scope="col">Index</th>
+              <th scope="col">Company</th>
+              <th scope="col">Interviewee</th>
+              <th scope="col">Type of discrimination</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for j in context.complaints %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ j.company }}</td>
+              <td>{{ j.firstname }}</td>
+              <td>{{ j.type_of_disability }}</td>
+              {% if j.status == "pending" %}
+              <td> Pending</td>
+              {% elif j.status == "in_process" %}
+              <td>In Process</td>
+              {% elif j.status == "resolved" %}
+              <td>Resolved</td>
+              {% endif %}
+
+              <td><a href="{% url 'complain_details' id=j.id %}">View Details</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-  </section>
-  {% include "footer.html" %}
+  </div>
+</section>
+{% include "footer.html" %}
   <!-- Portfolio Modals-->
   <!-- Portfolio Modal 1-->
 

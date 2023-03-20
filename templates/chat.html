@@ -138,7 +138,7 @@
                 messagesDiv.empty(); // clear the messages div
 
                 var messages = data.messages;
-                if (data.current_position != 0) {
+                if (data.current_position != 0 && data.current_position!=undefined ) {
                     messagesDiv.append('<div class="text-center"><h3><strong> Your current postion in chat is '+data.current_position+'</strong></h3></div>');
                 }
                 else {

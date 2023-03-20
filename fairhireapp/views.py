@@ -92,7 +92,7 @@ def dashboard(request):
     logged_user_details = userloggedin(request)
     if(logged_user_details["userid"] == "" or logged_user_details["loggedin_user"] == "User"):
         return render(request,"login.html")
-    else: 
+    else:
         role = request.session['loggedin_user']
         userid = request.session['userid']
         fname = request.session['fname']
@@ -139,7 +139,7 @@ def complain_details(request, id):
     logged_user_details = userloggedin(request)
     if(logged_user_details["userid"] == ""):
         return render(request,"login.html")
-    else: 
+    else:
         data = Complaints.objects.get(id=id)
 
         context = {
@@ -152,7 +152,7 @@ def complain_details(request, id):
 
         if request.session['loggedin_user'] == "User":
             return render(request, 'my_complain_details.html', {'context': context, 'data': data})
-        else: 
+        else:
             return render(request, 'user_complain_details.html', {'context': context, 'data': data})
 
 
@@ -162,7 +162,7 @@ def Statistics(request):
     logged_user_details = userloggedin(request)
     if(logged_user_details["userid"] == "" or logged_user_details["loggedin_user"] == "User"):
         return render(request,"login.html")
-    else: 
+    else:
         city_counts = Complaints.objects.values(
             'city').order_by().annotate(count=Count('city'))
         cities = [city_count['city'] for city_count in city_counts]
@@ -208,7 +208,7 @@ def newuser(request):
     print(logged_user_details["loggedin_user"])
     if(logged_user_details["userid"] == "" or logged_user_details["loggedin_user"] != "Admin"):
         return render(request,"login.html")
-    else: 
+    else:
         message = ""
 
         if request.method == 'POST':
@@ -234,7 +234,8 @@ def newuser(request):
                 data_to_add.save()
                 context = {
                     "message": "Registration Successful",
-                    "role": role
+                    "role": role,
+                    "user_logged_in": "True"
                 }
                 return render(request, "newuser.html", {"context": context})
 
@@ -275,7 +276,7 @@ def chat_staff(request):
             "role": request.session['loggedin_user'],
             'chats': values,
             "r_count": resolved_count,
-            "p_count": pending_count,
+            "p_count": pending_count
 
         }
         return render(request, 'chat_staff.html', {'context': context})
@@ -346,18 +347,18 @@ def chat_message(request):
 
 def get_messages(request, id):
     role = request.session.get('loggedin_user')
-    
+
     try:
-    
+
         print(ChatRoom.objects.get(id=id))
         chat_room = ChatRoom.objects.get(id=id)
-        
+
 
         current_position = ChatRoom.objects.filter(
             assigned_to=chat_room.assigned_to,
             created_at__lt=chat_room.created_at).count()
 
-        
+
     except ChatRoom.DoesNotExist:
         messages = [{'sender': " From Other Side ", 'message': "chat closed"}]
         print(messages)
@@ -367,8 +368,8 @@ def get_messages(request, id):
         #     return redirect('')
         # elif role == "chat_staff":
         #     return redirect('chat_staff')
-        
-    
+
+
     messages = ChatMessage.objects.filter(
         chat_room=chat_room).values('sender', 'message')
     print(current_position)

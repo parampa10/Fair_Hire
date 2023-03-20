@@ -17,58 +17,47 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
         type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
-
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-
+    <!-- <link href="{% static 'css/styles.css' %}" rel="stylesheet" /> -->
 </head>
 
 <body id="page-top">
     {% include "header.html" %}
 
-
-
-    <!-- About Section-->
-    <!-- <section class="page-section bg-primary text-white mb-0 " id="about"> -->
-    <section class="page-section bg-white text-primary mb-0 " id="about" style="margin-top: 100px;">
-
-        
-
-    <div class="container chat border">
-        <div class="row">
-            <a href="{% url 'resolved_chat' id=context.chatroom.id %}">chat_resolved</a>
-        </div>
-        <div class="row">
-            <div class="chat-messages col-md-8" id="messages">
-                <!-- messages will be dynamically added here -->
+    <section class="page-section bg-white text-primary mb-0 py-5">
+        <div class="container py-5">
+            <div class="row">
+                <a href="{% url 'resolved_chat' id=context.chatroom.id %}" class="btn btn-primary mb-3">Resolved
+                    Chats</a>
             </div>
-            <div class="col-md-12">
-                <h4>Chat Information</h4>
-                <p><strong>Requester:</strong> {{ context.chatroom.requester.email }}</p>
-                <p><strong>Assigned To:</strong> {{ context.chatroom.assigned_to.email }}</p>
-                <h4>Send a Message</h4>
-                <form id="send-message-form" method="post" action="{% url 'chat_message' %}">
-                    {% csrf_token %}
-                    <input type="hidden" id="chat-room-id" name="chat_room_id" value="{{ context.chatroom.id }}">
-                    <input type="hidden" id="sender-id" name="sender_id" value="{{ context.userid }}">
-                    <div class="input-group mb-3">
-                        <input type="text" id="message-input" name="message" class="form-control"
-                            placeholder="Type your message...">
-                        <button type="submit" class="btn btn-primary">Send</button>
-                    </div>
-                </form>
+            <div class="row">
+                <div class="col-lg-8 chat-messages mb-3" id="messages">
+                    <!-- messages will be dynamically added here -->
+                </div>
+                <div class="col-lg-4">
+                    <h4>Chat Information</h4>
+                    <p><strong>Requester:</strong> {{ context.chatroom.requester.email }}</p>
+                    <p><strong>Assigned To:</strong> {{ context.chatroom.assigned_to.email }}</p>
+                </div>
             </div>
-        </div>
-    </div>
-
-
-
-
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Send a Message</h4>
+                    <form id="send-message-form" method="post" action="{% url 'chat_message' %}">
+                        {% csrf_token %}
+                        <input type="hidden" id="chat-room-id" name="chat_room_id" value="{{ context.chatroom.id }}">
+                        <input type="hidden" id="sender-id" name="sender_id" value="{{ context.userid }}">
+                        <div class="input-group mb-3">
+                            <input type="text" id="message-input" name="message" class="form-control"
+                                placeholder="Type your message...">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
     {% include "footer.html" %}
-    <!-- Contact Section-->
 
-    <!-- Footer-->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -79,9 +68,9 @@
     <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-<script>
+    <script>
 
-    $(function () {
+        $(function () {
             // get the CSRF token from the cookie and set it as a header for AJAX requests
             function getCookie(name) {
                 let cookieValue = null;
@@ -110,7 +99,7 @@
                 const chatRoomId = $('#chat-room-id').val();
                 const senderId = $('#sender-id').val();
                 const message = $('#message-input').val();
-                console.log(chatRoomId, senderId,message)
+                console.log(chatRoomId, senderId, message)
                 if (message.trim() !== '') {
                     $.ajax({
                         url: $('#send-message-form').attr('action'),
@@ -120,12 +109,22 @@
                             'sender_id': senderId,
                             'message': message
                         },
-                        success: function (response) {
-                            // add the new message to the chat
-                            const messageHtml = '<div class="chat-message"><span class="chat-sender">' + response.sender + '</span><span class="chat-text">' + response.message + '</span></div>';
-                            $('.chat-messages').append(messageHtml);
-                            // clear the message input field
+                        success: function (message) {
+
                             $('#message-input').val('');
+                            // add the new message to the chat
+                            let senderName = (message.sender.split('@')[0]);
+                            console.log(senderName)
+                            const messageElement = `
+                                        <div class="message-container">
+                                            <span class="sender">${senderName}</span>: 
+                                            <span class="message">${message.message}</span>
+                                        </div>
+                                        `;
+                            // messagesDiv
+                            // const messageHtml = '<div class="chat-message"><span class="chat-sender">' + response.sender + '</span><span class="chat-text">' + response.message + '</span></div>';
+                            $('.chat-messages').append(messageElement);
+                            // clear the message input field
                         }
                     });
                 }
@@ -133,27 +132,42 @@
         });
         var lastMessageId = null;
 
-           function updateMessages(chatRoomId) {
-                $.get('/get_messages/' + chatRoomId, function (data) {
-                    var messagesDiv = $('#messages');
-                    messagesDiv.empty(); // clear the messages div
-                    
-                    var messages = data.messages;
+        function updateMessages(chatRoomId) {
+            $.get('/get_messages/' + chatRoomId, function (data) {
+                var messagesDiv = $('#messages');
+                messagesDiv.empty(); // clear the messages div
+
+                var messages = data.messages;
+                if (data.current_position != 0) {
+                    messagesDiv.append('<div class="text-center"><h3><strong> Your current postion in chat is '+data.current_position+'</strong></h3></div>');
+                }
+                else {
                     for (var i = 0; i < messages.length; i++) {
                         var message = messages[i];
-                        console.log(message.message)
-                        messagesDiv.append('<div><strong>' + message.sender + '</strong>: ' + message.message + '</div>');
+                        console.log(data.role)
+                        messagesDiv.append('<div><strong>' + message.sender.split('@')[0] + '</strong>: ' + message.message + '</div>');
+                        if (message.message == "chat closed") {
+                            messagesDiv.append('<div class="text-center"><h3><strong> Your chat will be closed in few seconds</strong></h3></div>');
+                            setTimeout(function () {
+                                if (data.role === 'chat_staff') {
+                                    window.location.href = '/chat_staff';
+                                } else {
+                                    window.location.href = '/'
+                                }
+                            }, 7000);
+                        }
                     }
-                });
-            }
+                }
+            });
+        }
 
-            setInterval(function () {
-                var chatRoomId = $('#chat-room-id').val();
-                updateMessages(chatRoomId);
-            }, 2000);
+        setInterval(function () {
+            var chatRoomId = $('#chat-room-id').val();
+            updateMessages(chatRoomId);
+        }, 2000);
 
 
-</script>
+    </script>
 </body>
 
 </html>

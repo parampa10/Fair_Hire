@@ -175,7 +175,10 @@ body {
     margin-left: 10px;
     animation: floatup .5s forwards
 }
-
+.input-box::placeholder {
+    color: #1a0909; /* set the placeholder text color */
+    opacity: 0.5; /* set the placeholder text opacity */
+}
 @keyframes floatup {
     from {
         transform: translateY(14px);
@@ -229,22 +232,19 @@ body {
             </div>
         </nav> -->
         <!-- Masthead-->
-        <header class="masthead bg-primary text-white text-center">
-            
-            <div class="container d-flex align-items-center flex-column">
-               
-                <img class="masthead-avatar mb-5" style="border-radius: 50%;" src="{% static 'assets/img/avataaars.png' %}" alt="..." />
-               
-                <h1 class="masthead-heading text-uppercase mb-0">Fight Against Discrimination</h1>
-               
-                <div class="divider-custom divider-light">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
-                </div>
-               
+    <header class="masthead text-white bg-primary text-center position-relative has-bg-img bg-purple bg-blend-multiply">
+        <div class="container d-flex align-items-center flex-column">
+            <div class="img-holder w-100 py-0">
+                <img class="bg obj-fit-cover img-fluid" src="{% static 'assets/img/Background.jpg'  %}" alt="...">
             </div>
-        </header>
+            <h1 class="masthead-heading text-uppercase mb-0 pt-3">Fight Against Discrimination</h1>
+            <div class="divider-custom divider-light">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+        </div>
+    </header>
 
 
 
@@ -297,14 +297,16 @@ body {
                             {% csrf_token %}
                             <div class="chat-bar-input-block">
                                 <div id="userInput">
-                                    <input id="textInput" class="input-box" type="text" name="msg"
+                                    <input id="textInput" class="input-box " type="text" name="msg"
                                         placeholder="Tap 'Enter' to send a message">
                                     <p></p>
                                 </div>
     
                                 <div class="chat-bar-icons">
                                     <!-- <button onclick="sendButton()" style="background: transparent; border: none;">-></button> -->
-                                    <input  type="submit" value="->" id="textInputsend" style="background: transparent; border: none;">
+                                <button type="submit" class="btn btn-primary" id="textInputsend">
+                                    <i class="fas fa-paper-plane"></i> 
+                                </button>
                                 </div>
                             </div>
                             </form>
@@ -440,12 +442,14 @@ var count =0
     //  if (one == true) { return } else {
         $(document).on('submit', "#chat_form", function (e) {
         count ++;
-       
         let userinput = $("#textInput").val()
         console.log(userinput)
+        $('#textInput').val('');
         let userHtml = '<p class="userText"><span>' + userinput + '</span></p>';
-
         $("#chatbox").append(userHtml);
+        let typingHtml = '<p class="botText"><span class="typing-indicator">Typing.....</span></p>';
+        $("#chatbox").append(typingHtml);
+
         document.getElementById("chat-bar-bottom").scrollIntoView(true);
 
         e.preventDefault()
@@ -453,11 +457,12 @@ var count =0
             type: 'POST',
             url: '/chatbot',
             data: {
-                message: $("#textInput").val(),
+                message:userinput,
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
             },
             success: function (data) {
-                $('#textInput').val('');
+                $("#chatbox").find(".typing-indicator").parent().remove();
+                
                 let botHtml = '<p class="botText"><span>' + data.res + '</span></p>';
                 $("#chatbox").append(botHtml);
 

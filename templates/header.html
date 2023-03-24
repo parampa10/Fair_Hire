@@ -13,6 +13,8 @@
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Font Awesome icons (free version)-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Google fonts-->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
@@ -29,6 +31,31 @@
         .nav-link.actives:hover {
 
             background-color: #ffffff;
+        }
+
+        .modal-content {
+            background: #1abc9c;
+            color: #0d0808;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            animation: scale-up 0.5s;
+        }
+.title-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+        .modal-title {
+            font-weight: bold;
+        }
+
+        @keyframes scale-up {
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
 
@@ -50,19 +77,23 @@
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="dashboard"
                             id="dashboard">Dashboard</a></li>
 
-                    {% else %}
 
+                    {% elif context.role == "chat_staff" %}
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/chat_staff"
+                            id="home">Dashboard</a></li>
+                    {% else %}
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/"
                             id="home">Home</a></li>
 
-                    {% if context.user_logged_in == "True" %}
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/complaint"
                             id="complaint">Complaint</a></li>
-                    {% if context.role == "User" %}
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/chat_request"
-                            id="chat">Chat</a></li>
-                    {% endif %}
-                    {% endif %}
+                    <!-- <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/chat_user"
+                            id="chat">Chat</a></li> -->
+                    <li class="nav-item mx-0 mx-lg-1">
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#" data-toggle="modal"
+                            data-target="#chatModal" id="chat">Chat</a>
+                    </li>
+
 
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="laws"
                             id="laws">Laws &
@@ -89,6 +120,32 @@
             </div>
         </div>
     </nav>
+    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="title-wrapper">
+                        <h5 class="modal-title d-block">Chat with our agent</h5>
+                        <p class="mb-0 d-block">Note: You may have to wait in queue</p>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="name-search-form" action="/chat_request" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            
+                            <input type="text" class="form-control" name="name" placeholder="Name" id="name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="Name-submit-btn">Start Chat</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Masthead-->
 
@@ -112,6 +169,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="{% static 'js/scripts.js' %}"></script>
+    <!-- Bootstrap CSS -->
+    
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <!-- * *                               SB Forms JS                               * *-->
     <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->

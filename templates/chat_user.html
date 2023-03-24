@@ -27,17 +27,20 @@
       
         <div class="container py-5">
             <div class="row">
-                <a href="{% url 'resolved_chat' id=context.chatroom.id %}" class="btn btn-primary mb-3">Resolved
+                <a href="{% url 'resolved_chat' id=context.id %}" class="btn btn-primary mb-3">Resolved
                     Chats</a>
             </div>
             <div class="row">
+                <div class="col-lg-8 mb-3" id="messages">
+                    <!-- messages will be dynamically added here -->
+                </div>
                 <div class="col-lg-8 chat-messages mb-3" id="messages">
                     <!-- messages will be dynamically added here -->
                 </div>
                 <div class="col-lg-4">
                     <h4>Chat Information</h4>
-                    <p><strong>Requester:</strong> {{ context.chatroom.requester.email }}</p>
-                    <p><strong>Assigned To:</strong> {{ context.chatroom.assigned_to.email }}</p>
+                    <p><strong>Requester:</strong> {{ context.requester }}</p>
+                    <p><strong>Assigned To:</strong> {{ context.assigned_to }}</p>
                 </div>
             </div>
             <div class="row">
@@ -45,7 +48,7 @@
                     <h4>Send a Message</h4>
                     <form id="send-message-form" method="post" action="{% url 'chat_message' %}">
                         {% csrf_token %}
-                        <input type="hidden" id="chat-room-id" name="chat_room_id" value="{{ context.chatroom.id }}">
+                        <input type="hidden" id="chat-room-id" name="chat_room_id" value="{{ context.id }}">
                         <input type="hidden" id="sender-id" name="sender_id" value="{{ context.userid }}">
                         <div class="input-group mb-3">
                             <input type="text" id="message-input" name="message" class="form-control"
@@ -133,23 +136,59 @@
         });
         var lastMessageId = null;
 
-        function updateMessages(chatRoomId) {
-            $.get('/get_messages/' + chatRoomId, function (data) {
-                var messagesDiv = $('#messages');
-                messagesDiv.empty(); // clear the messages div
+        // function updateMessages(chatRoomId) {
+        //     let requestData = { 'last_message_id': lastMessageId };
+        //     $.get('/get_messages/' + chatRoomId, function (data) {
+        //             if (messages.length > 0) {
+        //             lastMessageId = messages[messages.length - 1].id;
+        //         }
+        //         var messagesDiv = $('#messages');
+        //         // messagesDiv.empty(); // clear the messages div
 
-                var messages = data.messages;
-                if (data.current_position != 0 && data.current_position!=undefined ) {
-                    messagesDiv.append('<div class="text-center"><h3><strong> Your current postion in chat is '+data.current_position+'</strong></h3></div>');
-                }
-                else {
-                    for (var i = 0; i < messages.length; i++) {
-                        var message = messages[i];
-                        console.log(data.role)
-                        //  if (!$(`#message-${message.id}`).length) {
-                            messagesDiv.append('<div id="message-' + message.id + '"><strong>' + message.sender.split('@')[0] + '</strong>: ' + message.message + '</div>');
-                        // }  
-                        // messagesDiv.append('<div><strong>' + message.sender.split('@')[0] + '</strong>: ' + message.message + '</div>');
+        //         var messages = data.messages;
+        //         if (data.current_position != 0 && data.current_position!=undefined ) {
+        //             messagesDiv.append('<div class="text-center"><h3><strong> Your current postion in chat is '+data.current_position+'</strong></h3></div>');
+        //         }
+        //         else {
+                    
+        //             for (var i = 0; i < messages.length; i++) {
+        //                 var message = messages[i];
+        //                 console.log(message)
+        //                 if (!$(`#message-${message.id}`).length) {
+        //                     messagesDiv.append('<div id="message-' + message.id + '"><strong>' + message.sender.split('@')[0] + '</strong>: ' + message.message + '</div>');
+        //                 }       
+        //                 messagesDiv.append('<div><strong>' + message.sender.split('@')[0] + '</strong>: ' + message.message + '</div>');
+        //                 if (message.message == "chat closed") {
+        //                     messagesDiv.append('<div class="text-center"><h3><strong> Your chat will be closed in few seconds</strong></h3></div>');
+        //                     setTimeout(function () {
+        //                         if (data.role === 'chat_staff') {
+        //                             window.location.href = '/chat_staff';
+        //                         } else {
+        //                             window.location.href = '/'
+        //                         }
+        //                     }, 7000);
+        //                 }
+        //             }
+        //         }
+        //     });
+        // }
+   function updateMessages(chatRoomId) {
+        $.get('/get_messages/' + chatRoomId, function (data) {
+            var messagesDiv = $('#messages');
+            var messages = data.messages;
+
+            if (data.current_position != 0 && data.current_position != undefined) {
+                messagesDiv.append('<div class="text-center"><h3><strong> Your current postion in chat is ' + data.current_position + '</strong></h3></div>');
+            } else {
+                for (var i = 0; i < messages.length; i++) {
+                    var message = messages[i];
+                    console.log(message);
+
+                    // Only append the message if it doesn't exist in the message div
+                    if (!$(`#message-${message.id}`).length) {
+                         $('.chat-messages').empty()
+                        messagesDiv.append('<div id="message-' + message.id + '"><strong>' + message.sender.split('@')[0] + '</strong>: ' + message.message + '</div>');
+
                         if (message.message == "chat closed") {
                             messagesDiv.append('<div class="text-center"><h3><strong> Your chat will be closed in few seconds</strong></h3></div>');
                             setTimeout(function () {
@@ -162,10 +201,13 @@
                         }
                     }
                 }
-            });
-        }
-
-        setInterval(function () {
+            }
+        });
+    }
+    
+    
+    
+    setInterval(function () {
             var chatRoomId = $('#chat-room-id').val();
             updateMessages(chatRoomId);
         }, 2000);

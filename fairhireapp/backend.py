@@ -15,6 +15,7 @@ from django.conf import settings
 import os
 from smtplib import SMTPException
 from django.core.mail import EmailMessage, get_connection
+from django.core.mail import send_mail
 
 # Thigs we store in sessions = userid, user_logged_in, loggedin_user
 # if 'user_logged_in' in request.session:
@@ -127,38 +128,38 @@ def login(request):
             return render(request, "login.html", {"message": message})
 
 
-def registeruser(request):
+# def registeruser(request):
 
-    message = ""
+#     message = ""
 
-    if request.method == 'POST':
-        criterion1 = Q(userid=request.POST["email"])  # any query you want
-        isalready = User.objects.filter(criterion1).values()
-        values = list(isalready)
-        if(len(values) == 0):
+#     if request.method == 'POST':
+#         criterion1 = Q(userid=request.POST["email"])  # any query you want
+#         isalready = User.objects.filter(criterion1).values()
+#         values = list(isalready)
+#         if(len(values) == 0):
 
-            # otp process
+#             # otp process
 
-            data_to_add = User(
-                userid=request.POST["email"],
-                password=request.POST["password"],
-                role="User",
-                fname=request.POST["fname"],
-                lname=request.POST["lname"],
-                email=request.POST["email"],
+#             data_to_add = User(
+#                 userid=request.POST["email"],
+#                 password=request.POST["password"],
+#                 role="User",
+#                 fname=request.POST["fname"],
+#                 lname=request.POST["lname"],
+#                 email=request.POST["email"],
 
-            )
+#             )
 
-            data_to_add.save()
+#             data_to_add.save()
 
-            return render(request, "login.html", {"context": "Registration Successful"})
+#             return render(request, "login.html", {"context": "Registration Successful"})
 
-        else:
-            message = "This user is already registered"
-            return JsonResponse(message, safe=False)
+#         else:
+#             message = "This user is already registered"
+#             return JsonResponse(message, safe=False)
 
-    if request.method == 'GET':
-        return render(request, "registeruser.html", {"message": message})
+#     if request.method == 'GET':
+#         return render(request, "registeruser.html", {"message": message})
 
 
 def forgot_password(request):
@@ -259,41 +260,44 @@ def about(request):
 
 
 def new_complaint(request):
-    if request.method == 'GET':
+    # if request.method == 'GET':
 
-        logged_user_details = userloggedin(request)
-        if(logged_user_details["userid"] == ""):
-            return render(request, "login.html")
-        else:
-            context = {
-                "user_logged_in": request.session['user_logged_in'],
-                "userid": logged_user_details["userid"],
-                'role': logged_user_details["loggedin_user"]
-            }
-            return render(request, "new_complaint.html", {"context": context})
+    #     logged_user_details = userloggedin(request)
+    #     if(logged_user_details["userid"] == ""):
+    #         return render(request, "login.html")
+    #     else:
+    #         context = {
+    #             "user_logged_in": request.session['user_logged_in'],
+    #             "userid": logged_user_details["userid"],
+    #             'role': logged_user_details["loggedin_user"]
+    #         }
+    return render(request, "new_complaint.html")
 
+def generate_unique_token():
+    while True:
+        token = ''.join(random.choices(string.digits, k=8))
+        if not Complaints.objects.filter(complaint_token=token).exists():
+            return token
 
 def complaint(request):
     if request.method == 'GET':
-        logged_user_details = userloggedin(request)
-        if(logged_user_details["userid"] == ""):
-            return render(request, "login.html")
-        else:
-            role = request.session['loggedin_user']
+        # logged_user_details = userloggedin(request)
+        # if(logged_user_details["userid"] == ""):
+        #     return render(request, "login.html")
+        # else:
+        #     role = request.session['loggedin_user']
             # any query you want
-            criterion1 = Q(userid=logged_user_details['userid'])
-            isalready = Complaints.objects.filter(criterion1).values()
-            values = list(isalready)
+            # criterion1 = Q(userid=logged_user_details['userid'])
+            # isalready = Complaints.objects.filter(criterion1).values()
+            # values = list(isalready)
 
             context = {
-                "user_logged_in": request.session['user_logged_in'],
-                "userid": logged_user_details['userid'],
-                "complaints": values,
-                'message':"False",
-                'role':role
+                
+                'message':"False"
+               
             }
+            # return render(request, "complaint.html", {"context": context})
             return render(request, "complaint.html", {"context": context})
-
     if request.method == 'POST':
         try:
         # complaint = Complaints.objects.get(pk=complaint_id)
@@ -308,16 +312,16 @@ def complaint(request):
                     userid for userid, count in complaints_count.items() if count == min_complaints]
                 assigned_user_id = least_complaints_users[randint(
                     0, len(least_complaints_users)-1)]
-                print(assigned_user_id)
                 assigned_user = User.objects.get(email=assigned_user_id)
-
+            unique_token = generate_unique_token()
+            # print(unique_token)
             # complaint.save()
             # return HttpResponseRedirect(reverse('complaints_list'))
             data_to_add = Complaints(
                 firstname=request.POST["firstname"],
                 lastname=request.POST["lastname"],
                 mobile=request.POST["mobile"],
-                email=request.session['userid'],
+                email=request.POST['email'],
                 type_of_disability=request.POST["type_of_disability"],
                 description=request.POST["description"],
                 company=request.POST["company"],
@@ -325,50 +329,66 @@ def complaint(request):
                 state=request.POST["state"],
                 pincode=request.POST["pincode"],
                 date=request.POST["date"],
-                userid=request.session['userid'],
+                userid=request.POST['email'],
+                complaint_token=unique_token,
                 assigniduserid=assigned_user
             )
 
-
+            
             # complaint.assigniduserid = assigned_user_id
             data_to_add.save()
 
-            # any query you want
-            criterion1 = Q(userid=request.session['userid'])
-            isalready = Complaints.objects.filter(criterion1).values()
-            values = list(isalready)
 
             context = {
-                "user_logged_in": request.session['user_logged_in'],
-                "userid": request.session['userid'],
-                "complaints": values,
+            
                 "message":"Your complaint has been registered successfully"
             }
 
                 # sending confirmation mail function calling
-
-            send_email(request)
+            
+            send_email(request,unique_token)
+            
             return render(request, "complaint.html", {"context": context})
         except assigned_user.DoesNotExist:
            
             return JsonResponse({'messages': "Please try after some time"})
 
         
-        
-# email confirmation fucntion
+def searched_Complain(request):
+    token = request.GET.get('token')
+    email = request.GET.get('email')
+    complaints = Complaints.objects.filter(complaint_token=token, email=email)
+    data = []
+    for complaint in complaints:
+        link = '<a href="/complain_details/{}">View Details</a>'.format(complaint.id)
+        data.append({
+            'id': complaint.id,
+            'company': complaint.company,
+            'firstname': complaint.firstname,
+            'type_of_disability': complaint.type_of_disability,
+            'status': complaint.status,
+            'link':link
+            
+        })
+    print(data)
+    return JsonResponse({'complaints': data})
 
 
-def send_email(request):
+def send_email(request,unique_token):
 
-    email = request.session['userid']
+    email =request.POST['email']
     type_of_disability = request.POST["type_of_disability"]
     company = request.POST["company"]
     date = request.POST["date"]
-    message = "This email is to notify you that the compaint of "+type_of_disability + \
-        " you filed against the company "+company+" has been filed on date "+date+".\n"
+    message = message = "This email is to notify you that the complaint of " + type_of_disability + \
+    " you filed against the company " + company + " has been filed on date " + date + ".\n" + \
+    "To follow the progress of your complaint, please use the following unique token: " + unique_token + "."
+
+
     
     if request.method == "POST":
         try:
+            print("hii")
             with get_connection(
                 host=settings.EMAIL_HOST,
                 port=settings.EMAIL_PORT,
@@ -381,7 +401,11 @@ def send_email(request):
                 recipient_list = [email, ]
                 message = message
                 EmailMessage(subject, message, email_from,
-                             recipient_list, connection=connection).send()
+                            recipient_list, connection=connection).send()
+            print(unique_token)
+
         except SMTPException:
+            print("data")
             return JsonResponse({'messages': "Please try after some time"})
-    return render(request,'home.html')
+
+        return JsonResponse({'message': 'Email sent successfully.'})

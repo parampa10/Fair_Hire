@@ -1,3 +1,6 @@
+import string
+from django.core.validators import MinLengthValidator
+import random
 from django.db import models
 from datetime import timedelta
 from django.utils import timezone
@@ -42,13 +45,15 @@ class Complaints(models.Model):
         max_length=20, choices=STATUS_CHOICES, default='pending')
     assigniduserid = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True)
+    complaint_token = models.CharField(max_length=8, unique=True, validators=[MinLengthValidator(8)])
+
+
 
 
 class ChatRoom(models.Model):
     assigned_to = models.ForeignKey(
         User, related_name='chat_assignments', on_delete=models.CASCADE)
-    requester = models.ForeignKey(
-        User, related_name='chat_requests', on_delete=models.CASCADE)
+    requester = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
@@ -64,7 +69,7 @@ class ChatRoom(models.Model):
 class ChatMessage(models.Model):
     chat_room = models.ForeignKey(
         ChatRoom, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    sender = models.CharField(max_length=255)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

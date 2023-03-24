@@ -1,3 +1,5 @@
+from django.core.mail import EmailMessage, get_connection
+from django.conf import settings
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -72,6 +74,7 @@ def change_status(request, pk):
     new_status = request.POST.get('status')
 
     if new_status in ('resolved', 'in_process', 'pending'):
+        send_status_email(request,complaint,new_status)
         complaint.status = new_status
         complaint.save()
         return redirect('dashboard')
@@ -84,6 +87,51 @@ def change_status(request, pk):
     # return render(request, "dashboard.html", {"context": context})
     # return render(request,"dashboard.html",{"context": values})
 
+
+from smtplib import SMTPException
+def send_status_email(request,complaint, status):
+
+    email = complaint.email
+    old_status = complaint.status
+    if old_status == "pending":
+        old_status = "Pending"
+    elif old_status == "in_process":
+        old_status = "In Process"
+    else:
+        old_status = "Resolved"
+    if status == "pending" :
+        status = "Pending"
+    elif status == "in_process":
+        status = "In Process"
+    else:
+        status = "Resolved"
+    message = message = "This email is to notify you that the complaint of " + complaint.complaint_token + \
+        "  This complain status has been changed from " + \
+        old_status + " to " + status + "."
+
+    if request.method == "POST":
+        try:
+            with get_connection(
+                host=settings.EMAIL_HOST,
+                port=settings.EMAIL_PORT,
+                username=settings.EMAIL_HOST_USER,
+                password=settings.EMAIL_HOST_PASSWORD,
+                use_tls=settings.EMAIL_USE_TLS
+            ) as connection:
+                subject = "Complaint confirmation."
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email, ]
+                message = message
+                EmailMessage(subject, message, email_from,
+                             recipient_list, connection=connection).send()
+           
+
+            return JsonResponse({'message': 'This endpoint only accepts POST requests.'})
+        except SMTPException:
+            print("data")
+            return JsonResponse({'messages': "Please try after some time"})
+    else:
+        return JsonResponse({'message': 'This endpoint only accepts POST requests.'})
 
 def dashboard(request):
     # values = Complaints.objects.all().order_by('date')
@@ -136,12 +184,18 @@ def dashboard(request):
 
 
 def complain_details(request, id):
-    logged_user_details = userloggedin(request)
-    if(logged_user_details["userid"] == ""):
-        return render(request,"login.html")
-    else:
-        data = Complaints.objects.get(id=id)
+   
+    data = Complaints.objects.get(id=id)
+    
 
+    return render(request, 'my_complain_details.html', { 'data': data})
+
+
+def complain_details_staff(request, id):
+
+    data = Complaints.objects.get(id=id)
+
+    if (request.session['user_logged_in'] == "True"):
         context = {
             "user_logged_in": request.session['user_logged_in'],
             "userid": request.session['userid'],
@@ -149,12 +203,9 @@ def complain_details(request, id):
 
 
         }
+        return render(request, 'user_complain_details.html', {'context': context, 'data': data})
 
-        if request.session['loggedin_user'] == "User":
-            return render(request, 'my_complain_details.html', {'context': context, 'data': data})
-        else:
-            return render(request, 'user_complain_details.html', {'context': context, 'data': data})
-
+    
 
 # --------------------------------------------------------------------------------
 # rom django.shortcuts import render, redirect
@@ -285,8 +336,17 @@ def chat_staff(request):
 
 
 def chat_request(request):
-    current_user_email = request.session['userid']
-    current_user = User.objects.get(email=current_user_email)
+    # current_user_email = request.session['u
+    # serid']
+    
+    current_user = request.POST.get('name')
+    if current_user is None:
+        # Handle the case when the 'name' key is not provided
+        # e.g., return an error message or use a default value
+        current_user = "Chat_Person"
+    print(current_user)
+    request.session['fname']=current_user
+    print(current_user)
     staff_users = User.objects.filter(role='chat_staff')
     chat_count = {}
     for user in staff_users:
@@ -304,12 +364,18 @@ def chat_request(request):
         assigned_to=assigned_user, requester=current_user)
 
     context = {
-        "user_logged_in": request.session['user_logged_in'],
-        "userid": request.session['userid'],
-        "role": request.session['loggedin_user'],
-        'chatroom': chat_room
-    }
-    return render(request, 'chat.html', {'context': context})
+            'id': chat_room.id,
+            'requester': chat_room.requester,
+            'assigned_to': chat_room.assigned_to.fname,
+            'created_at': chat_room.created_at,
+            'is_active': chat_room.is_active ,
+            'userid':request.session['fname']   
+            
+        }
+    
+    print(context)
+    # return JsonResponse({'context': context})
+    return render(request, 'chat_user.html', {'context': context})
 
 
 def staff_chat_room(request,id):
@@ -329,17 +395,17 @@ def chat_message(request):
         sender_id = request.POST.get('sender_id')
         message = request.POST.get('message')
         chat_room = ChatRoom.objects.get(id=chat_room_id)
-        sender = User.objects.get(userid=sender_id)
+        sender = request.session['fname']
         chat_message = ChatMessage.objects.create(
             chat_room=chat_room,
             sender=sender,
             message=message
         )
-        print(chat_message)
         response_data = {
             'message': message,
-            'sender': sender.email
+            'sender': sender
         }
+        print(response_data)
         return JsonResponse(response_data)
     else:
         return JsonResponse({})
@@ -371,15 +437,15 @@ def get_messages(request, id):
 
 
     messages = ChatMessage.objects.filter(
-        chat_room=chat_room).values('sender', 'message')
-    print(current_position)
+        chat_room=chat_room).values('id', 'sender', 'message')
+    print(messages)
     return JsonResponse({'messages': list(messages),'role':role,'current_position':current_position})
 
 
 def resolved_chat(request, id):
-    role = request.session.get('loggedin_user')
-    userid = request.session.get('userid')
     try:
+        role = request.session.get('loggedin_user')
+        userid = request.session.get('userid')
         chat_room = ChatRoom.objects.get(id=id)
     except ChatRoom.DoesNotExist:
         return redirect('chat_staff' if role == 'chat_staff' else '/')

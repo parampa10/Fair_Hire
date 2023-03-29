@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
 from django.db.models import Q
@@ -184,28 +185,29 @@ def dashboard(request):
 
 
 def complain_details(request, id):
-   
-    data = Complaints.objects.get(id=id)
-    
+    try:
+        data = Complaints.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return redirect('/')
 
-    return render(request, 'my_complain_details.html', { 'data': data})
+    return render(request, 'my_complain_details.html', {'data': data})
+
 
 
 def complain_details_staff(request, id):
+    try:
+        data = Complaints.objects.get(id=id)
+    except ObjectDoesNotExist:
+        # Replace 'chat_staff' with the correct view name for the chat staff page
+        return redirect(request.META.get('HTTP_REFERER', '/'))
 
-    data = Complaints.objects.get(id=id)
-
-    if (request.session['user_logged_in'] == "True"):
+    if request.session.get('user_logged_in') == "True":
         context = {
             "user_logged_in": request.session['user_logged_in'],
             "userid": request.session['userid'],
             "role": request.session['loggedin_user']
-
-
         }
         return render(request, 'user_complain_details.html', {'context': context, 'data': data})
-
-    
 
 # --------------------------------------------------------------------------------
 # rom django.shortcuts import render, redirect
@@ -453,6 +455,75 @@ def resolved_chat(request, id):
     chat_room.save()
     chat_room.resolve()
     return redirect('chat_staff' if role == 'chat_staff' else '/')
+
+
+def add_comment(request, complaint_id):
+    if request.method == 'POST':
+        comment = request.POST['comment']
+        try:
+            complaint = Complaints.objects.get(id=complaint_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({"error": "Complaint not found"}, status=404)
+
+
+        send_comment_email(request,complaint,comment)
+        complaint.comment = comment
+        complaint.save()
+        return JsonResponse({"comment": comment})
+
+
+def send_comment_email(request,complaint, comment):
+
+    email = complaint.email
+   
+    message = message = "This email is to notify you that the complaint of  " + complaint.complaint_token + \
+        "   Ministry has added comment on your complaint " +\
+        "[ "+comment + " ]"
+
+    if request.method == "POST":
+        try:
+            with get_connection(
+                host=settings.EMAIL_HOST,
+                port=settings.EMAIL_PORT,
+                username=settings.EMAIL_HOST_USER,
+                password=settings.EMAIL_HOST_PASSWORD,
+                use_tls=settings.EMAIL_USE_TLS
+            ) as connection:
+                subject = "Complaint confirmation."
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email, ]
+                message = message
+                EmailMessage(subject, message, email_from,
+                             recipient_list, connection=connection).send()
+
+            return JsonResponse({'message': 'This endpoint only accepts POST requests.'})
+        except SMTPException:
+            print("data")
+            return JsonResponse({'messages': "Please try after some time"})
+    else:
+        return JsonResponse({'message': 'This endpoint only accepts POST requests.'})
+
+def delete_comment(request, complaint_id):
+    if request.method == 'POST':
+        try:
+            complaint = Complaints.objects.get(id=complaint_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({"error": "Complaint not found"}, status=404)
+
+        complaint.comment = None
+        complaint.save()
+        return JsonResponse({"success": True})
+
+
+def delete_complaint(request, complaint_id):
+    try:
+        complaint = Complaints.objects.get(id=complaint_id)
+    except ObjectDoesNotExist:
+        return redirect('/')
+    
+    complaint.delete()
+    return redirect('/')
+
 
 # def get_messages(request, id):
 #     role = request.session['loggedin_user']

@@ -46,6 +46,7 @@ class Complaints(models.Model):
     assigniduserid = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True)
     complaint_token = models.CharField(max_length=8, unique=True, validators=[MinLengthValidator(8)])
+    comment = models.TextField(null=True)
 
 
 

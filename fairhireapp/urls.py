@@ -40,7 +40,12 @@ urlpatterns = [
     path('resolved_chat/<int:id>', views.resolved_chat, name="resolved_chat"),
     path('chat_message', views.chat_message, name='chat_message'),
     path('chat_staff/staff_chat_room/<int:id>', views.staff_chat_room, name='staff_chat_room'),
-
+    path('add_comment/<int:complaint_id>',
+         views.add_comment, name='add_comment'),
+    path('delete_comment/<int:complaint_id>/',
+         views.delete_comment, name='delete_comment'),
+    path('delete_complaint/<int:complaint_id>/',
+         views.delete_complaint, name='delete_complaint'),
 
 
     # path('addnewuser',views.addnewuser)

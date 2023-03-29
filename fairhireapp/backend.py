@@ -15,7 +15,6 @@ from django.conf import settings
 import os
 from smtplib import SMTPException
 from django.core.mail import EmailMessage, get_connection
-from django.core.mail import send_mail
 
 # Thigs we store in sessions = userid, user_logged_in, loggedin_user
 # if 'user_logged_in' in request.session:
@@ -388,7 +387,6 @@ def send_email(request,unique_token):
     
     if request.method == "POST":
         try:
-            print("hii")
             with get_connection(
                 host=settings.EMAIL_HOST,
                 port=settings.EMAIL_PORT,
@@ -401,11 +399,12 @@ def send_email(request,unique_token):
                 recipient_list = [email, ]
                 message = message
                 EmailMessage(subject, message, email_from,
-                            recipient_list, connection=connection).send()
+                             recipient_list, connection=connection).send()
             print(unique_token)
-
+    
+            return JsonResponse({'message': 'This endpoint only accepts POST requests.'})
         except SMTPException:
             print("data")
             return JsonResponse({'messages': "Please try after some time"})
-
-        return JsonResponse({'message': 'Email sent successfully.'})
+    else:
+        return  JsonResponse({'message': 'This endpoint only accepts POST requests.'})

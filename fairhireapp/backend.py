@@ -58,9 +58,9 @@ def login(request):
         values = list(isalready)
 
         if(len(values) == 0):
-            message = "This user is not registered"
+            msg = "This user is not registered or password is wrong"
             # print("Hello")
-            return JsonResponse(message, safe=False)
+            return render(request, "login.html", {"msg": msg})
         else:
             message = "login successful"
 
@@ -298,6 +298,7 @@ def complaint(request):
             # return render(request, "complaint.html", {"context": context})
             return render(request, "complaint.html", {"context": context})
     if request.method == 'POST':
+        
         try:
         # complaint = Complaints.objects.get(pk=complaint_id)
             staff_users = User.objects.filter(role='Staff')
@@ -316,6 +317,10 @@ def complaint(request):
             # print(unique_token)
             # complaint.save()
             # return HttpResponseRedirect(reverse('complaints_list'))
+            
+
+
+
             data_to_add = Complaints(
                 firstname=request.POST["firstname"],
                 lastname=request.POST["lastname"],

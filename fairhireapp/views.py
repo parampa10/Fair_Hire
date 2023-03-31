@@ -294,7 +294,7 @@ def newuser(request):
 
             else:
                 message = "This user is already registered"
-                return JsonResponse(message, safe=False)
+                return render(request, "newuser.html", {"msg": message})
 
         if request.method == 'GET':
             if 'user_logged_in' in request.session:

@@ -61,17 +61,17 @@
             
 
           
-          <form  id="contactForm" action="complaint" method="post">
+          <form  id="contactForm" class="needs-validation" action="complaint" method="post" novalidate>
             <!-- Name input-->
             {% csrf_token %}
             <div class="">
               <label class="" for="firstname">First name</label>
-              <input class="form-control" id="firstname" name="firstname" type="text" placeholder="Enter your Firstname..." />
+              <input class="form-control" id="firstname" name="firstname" type="text" placeholder="Enter your Firstname..."  />
               
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">Firstname is required.</div> -->
             </div>
             <br>
-
+            
             <div class="">
               <label for="name">Last name</label>
               <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Enter your Lastname..."
@@ -82,9 +82,13 @@
 
             <br>
             <div class="">
+              
               <label for="email">Email</label>
-              <input class="form-control" id="email" name="email" type="text" placeholder="Enter your email address..." />
-
+              
+              <input class="form-control" id="email" name="email" type="text" placeholder="Enter your email address..." required/>
+              <div class="invalid-feedback">
+                Please enter Email.
+              </div>
               <!-- <div class="invalid-feedback" data-sb-feedback="lastname:required">Lastname is required.</div> -->
             </div>
 
@@ -126,9 +130,10 @@
 
             <div class="">
               <label for="name">Company</label>
-              <input class="form-control" id="company" name="company" type="text" placeholder="Enter Company Name..."
-              />
-             
+              <input class="form-control" id="company" name="company" type="text" placeholder="Enter Company Name..."required/>
+              <div class="invalid-feedback">
+                Please enter Company.
+              </div>
               <!-- <div class="invalid-feedback" data-sb-feedback="company:required">A company is required.</div> -->
             </div>
             <br>
@@ -136,17 +141,21 @@
             <div class="">
               <label for="name">City</label>
               <input class="form-control" id="city" name="city" type="text" placeholder="Enter City..."
-                data-sb-validations="required" />
-              
+                data-sb-validations="required" required/>
+                <div class="invalid-feedback">
+                  Please enter City.
+                </div>
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A city is required.</div> -->
             </div>
             <br>
 
             <div class="">
               <label for="name">Province</label>
-              <input class="form-control" id="state" name="state" type="text" placeholder="Enter State..."
-                />
-              
+              <input class="form-control" id="state" name="state" type="text" placeholder="Enter Province..."
+              required/>
+              <div class="invalid-feedback">
+                Please enter Province.
+              </div>
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A state is required.</div> -->
             </div>
             <br>
@@ -154,8 +163,10 @@
             <div class="">
               <label for="name">Postal Code</label>
               <input class="form-control" id="pincode" name="pincode" type="text" placeholder="Enter Pincode..."
-               />
-             
+              required />
+              <div class="invalid-feedback">
+                Please enter postal-code.
+              </div>
               <!-- <div class="invalid-feedback" data-sb-feedback="name:required">A pincode is required.</div> -->
             </div>
             <br>
@@ -164,8 +175,8 @@
             <!-- Phone number input-->
             <div class="">
               <label for="phone">Date</label>
-              <input class="form-control" id="date" name="date" 
-                />
+              <input class="form-control" id="date" name="date" type="date"
+               />
               
               <!-- <div class="invalid-feedback" data-sb-feedback="phone:required">A date number is required.</div> -->
             </div>
@@ -219,7 +230,30 @@
   <!-- Portfolio Modal 5-->
  
   <!-- Portfolio Modal 6-->
-  
+  <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+{% comment %} (function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0; 
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})() {% endcomment %}
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Core theme JS-->

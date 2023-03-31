@@ -51,9 +51,15 @@
 
         <!-- ========================= Main ==================== -->
         <div class="main"  style="width: 90% !important;">
+            
             <form id="contactForm" action="newuser" method="post" style="width: 100%; margin: 50px; margin-top: 0px;">
                 <!-- Name input-->
                 {% csrf_token %}
+                {% if msg%}
+                <div class="alert alert-danger" role="alert">
+                    {{msg}}
+                  </div>
+                {% endif%}
                 <div class="form-floating mb-3">
                     <input class="form-control" id="fname" name="fname" type="text" placeholder="Enter your Firstname..." />
                     <label for="name">First Name</label>

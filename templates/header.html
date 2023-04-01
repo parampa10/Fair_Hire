@@ -21,12 +21,27 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
         type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'en,fr', layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT, autoDisplay: false, multilanguagePage: true }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+
 
     <style>
-        #statistics_option, #dashboard, #adduser_option{
-            display: none ;
+        #statistics_option,
+        #dashboard,
+        #adduser_option {
+            display: none;
         }
+
         .actives {
             background-color: #1abc9c;
         }
@@ -43,13 +58,17 @@
             border-radius: 10px;
             animation: scale-up 0.5s;
         }
-        .side-link{
-            display: none;;
+
+        .side-link {
+            display: none;
+            ;
         }
-.title-wrapper {
-  display: flex;
-  flex-direction: column;
-}
+
+        .title-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
         .modal-title {
             font-weight: bold;
         }
@@ -63,39 +82,45 @@
                 transform: scale(1);
             }
         }
-        .menu-clicked{
+
+        .menu-clicked {
             display: flex !important;
             justify-content: center;
         }
-        .menu-clicked ul li{
+
+        .menu-clicked ul li {
             width: 100%;
         }
+
         .menu-clicked ul {
             width: 100%;
         }
 
         @media (max-width: 450px) {
             .px-0 {
-            padding-left: 10px !important;
+                padding-left: 10px !important;
+            }
+
+            #statistics_option,
+            #dashboard,
+            #adduser_option {
+                display: block !important;
+            }
+
         }
 
-        #statistics_option, #dashboard, #adduser_option{
-            display: block !important;
-        }
-        
-        }
-       
         @media (max-width: 960px) {
-         
-        .side-link{
-            display: block;;
-        }
+
+            .side-link {
+                display: block;
+                ;
+            }
         }
 
         #google_translate_element {
             display: inline-block;
         }
-    
+
         .goog-te-menu-value {
             padding: 3px 10px !important;
             border-radius: 5px !important;
@@ -103,21 +128,13 @@
             color: #ffffff !important;
             transition: background-color 0.3s !important;
         }
-    
+
         .goog-te-menu-value:hover {
             background-color: #148f77 !important;
         }
-        
-        
-        
     </style>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     
+
 </head>
 
 <body id="page-top">
@@ -125,30 +142,30 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary text-uppercase fixed-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand" href="/">Fairhire</a>
-            <button class="navbar-toggler" type="button" aria-expanded="false" onclick="hidemenu()"  >
-                <span  class="navbar-toggler-icon"></span>
-              </button>
+            <button class="navbar-toggler" type="button" aria-expanded="false" onclick="hidemenu()">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
 
                     {% if context.role == "Admin" or context.role == "Staff" %}
-                    <li class="nav-item mx-0 mx-lg-1" id="dashboard"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/dashboard"
-                            >Dashboard</a></li>
-                            
-                            {% endif %} 
+                    <li class="nav-item mx-0 mx-lg-1" id="dashboard"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                            href="/dashboard">Dashboard</a></li>
+
+                    {% endif %}
 
                     {% if context.role == "Admin" %}
-                    <li class="nav-item mx-0 mx-lg-1" id="statistics_option"><a class="nav-link py-3 px-0 px-lg-3 rounded"  href="/statistics"
-                        >Statistics</a></li>
-                        <li class="nav-item mx-0 mx-lg-1" id="adduser_option" ><a class="nav-link py-3 px-0 px-lg-3 rounded"   href="/newuser"
-                            >Add user</a></li>
+                    <li class="nav-item mx-0 mx-lg-1" id="statistics_option"><a
+                            class="nav-link py-3 px-0 px-lg-3 rounded" href="/statistics">Statistics</a></li>
+                    <li class="nav-item mx-0 mx-lg-1" id="adduser_option"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                            href="/newuser">Add user</a></li>
 
-                            {% endif %}     
-                    
-                            {% if context.role == "Admin" or context.role == "Staff" %}
-                   
-                           
-                        
+                    {% endif %}
+
+                    {% if context.role == "Admin" or context.role == "Staff" %}
+
+
+
 
 
                     {% elif context.role == "chat_staff" %}
@@ -187,13 +204,24 @@
                             id="laws">Login</a></li>
 
                     {% endif %}
-                    <div id="google_translate_element"></div>
+                   
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Translate
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onclick="changeLanguage('en')">English</a>
+                            <a class="dropdown-item" href="#" onclick="changeLanguage('fr')">Français</a>
 
+                        </div>
+                    </div>
 
                 </ul>
             </div>
         </div>
     </nav>
+    <div id="google_translate_element" style="display:none;"></div>
     <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -211,7 +239,7 @@
                     <form id="name-search-form" action="/chat_request" method="post">
                         {% csrf_token %}
                         <div class="form-group">
-                            
+
                             <input type="text" class="form-control" name="name" placeholder="Name" id="name" required>
                         </div>
                         <button type="submit" class="btn btn-primary" id="Name-submit-btn">Start Chat</button>
@@ -244,13 +272,13 @@
     <!-- Core theme JS-->
     <script src="{% static 'js/scripts.js' %}"></script>
     <!-- Bootstrap CSS -->
-    
+
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
+
     <!-- Popper JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    
+
     <!-- Bootstrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -259,20 +287,55 @@
     <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-
+    <!-- Bootstrap core JS-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <!-- * *                               SB Forms JS                               * *-->
+    <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
     <script>
-        function hidemenu(){
-            if(document.getElementById("navbarResponsive").classList.contains("menu-clicked")){
-                
+
+        function changeLanguage(language) {
+            var googleTranslateElement = document.querySelector("#google_translate_element");
+            var selectElement = googleTranslateElement.querySelector(".goog-te-combo");
+            selectElement.value = language;
+            var event = new Event("change");
+            selectElement.dispatchEvent(event);
+        }
+
+        function hidemenu() {
+            if (document.getElementById("navbarResponsive").classList.contains("menu-clicked")) {
+
                 document.getElementById("navbarResponsive").classList.remove("menu-clicked");
             }
-            else{
+            else {
                 console.log("Hello");
                 document.getElementById("navbarResponsive").classList.add("menu-clicked");
             }
-            
-            
-         }
+
+
+        }
         linkactive();
         function linkactive(element) {
             console.log(window.location.pathname);

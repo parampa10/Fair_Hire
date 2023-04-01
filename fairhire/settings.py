@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fairhireapp',
-    
+    'google_translate',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

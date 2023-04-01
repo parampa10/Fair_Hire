@@ -1,3 +1,4 @@
+{% load google_translate %}
 {{message}}
 <a href="/complaint">Complaint</a>
 {% load static %}
@@ -167,7 +168,7 @@
 
 
                 </ul>
-            </div>
+            </div>{% google_translate %}
         </div>
     </nav>
     <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel"

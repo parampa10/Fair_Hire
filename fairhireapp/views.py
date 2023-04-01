@@ -183,6 +183,35 @@ def dashboard(request):
         # return JsonResponse({"context": context})
         return render(request, "dashboard.html", {"context": context})
 
+def change_password(request):
+    if request.method == 'GET':
+        return render(request, "change_password.html",)
+    if request.method == 'POST':
+        email = request.POST["email"]
+        old_password = request.POST["old_password"]
+        new_password = request.POST["new_password"]
+        if email=="":
+            msg_error="Enter proper credentials" 
+            return render(request, "change_password.html", {"msg_error": msg_error})
+        try:
+            user_obj=User.objects.get(email=email)
+        except:
+            msg_error="Enter proper credentials" 
+            return render(request, "change_password.html", {"msg_error": msg_error})
+
+        if old_password==user_obj.password:
+            user_obj.password=new_password
+            user_obj.save()
+            msg="Password successfully changed!" 
+            return render(request, "change_password.html", {"msg": msg})
+    
+        else:
+            msg_error="Old password wrong check again" 
+            return render(request, "change_password.html", {"msg_error": msg_error})
+
+        
+    
+
 
 def complain_details(request, id):
     try:

@@ -58,9 +58,10 @@ def login(request):
         values = list(isalready)
 
         if(len(values) == 0):
-            message = "This user is not registered"
+            msg = "This user is not registered or password is wrong"
             # print("Hello")
-            return JsonResponse(message, safe=False)
+            
+            return render(request, "login.html", {"msg": msg})
         else:
             message = "login successful"
 

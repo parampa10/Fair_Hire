@@ -24,6 +24,9 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
 
     <style>
+        #statistics_option, #dashboard, #adduser_option{
+            display: none ;
+        }
         .actives {
             background-color: #1abc9c;
         }
@@ -75,6 +78,10 @@
             .px-0 {
             padding-left: 10px !important;
         }
+
+        #statistics_option, #dashboard, #adduser_option{
+            display: block !important;
+        }
         
         }
        
@@ -102,15 +109,21 @@
                 <ul class="navbar-nav ms-auto">
 
                     {% if context.role == "Admin" or context.role == "Staff" %}
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/dashboard"
-                            id="dashboard">Dashboard</a></li>
-                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/statistics"
-                                id="dashboard">Statistics</a></li>
-                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/newuser"
-                                    id="dashboard">Add user</a></li>
-
-                           
+                    <li class="nav-item mx-0 mx-lg-1" id="dashboard"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/dashboard"
+                            >Dashboard</a></li>
                             
+                            {% endif %} 
+
+                    {% if context.role == "Admin" %}
+                    <li class="nav-item mx-0 mx-lg-1" id="statistics_option"><a class="nav-link py-3 px-0 px-lg-3 rounded"  href="/statistics"
+                        >Statistics</a></li>
+                        <li class="nav-item mx-0 mx-lg-1" id="adduser_option" ><a class="nav-link py-3 px-0 px-lg-3 rounded"   href="/newuser"
+                            >Add user</a></li>
+
+                            {% endif %}     
+                    
+                            {% if context.role == "Admin" or context.role == "Staff" %}
+                   
                            
                         
 

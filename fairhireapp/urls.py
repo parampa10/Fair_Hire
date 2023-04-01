@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import chatbot
+from .views import change_password, chatbot
 from .views import change_status
 from .views import dashboard
 from . import views
@@ -30,6 +30,7 @@ urlpatterns = [
 
     path('chatbot', chatbot, name='chatbot'),
     path('dashboard',dashboard, name='dashboard'),
+    path('change_password',change_password, name='change_password'),
     path('chat_staff', views.chat_staff, name='chat_staff'),
     path('newuser', views.newuser),
    

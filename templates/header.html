@@ -1,4 +1,3 @@
-{% load google_translate %}
 {{message}}
 <a href="/complaint">Complaint</a>
 {% load static %}
@@ -92,10 +91,33 @@
             display: block;;
         }
         }
-       
+
+        #google_translate_element {
+            display: inline-block;
+        }
+    
+        .goog-te-menu-value {
+            padding: 3px 10px !important;
+            border-radius: 5px !important;
+            background-color: #1abc9c !important;
+            color: #ffffff !important;
+            transition: background-color 0.3s !important;
+        }
+    
+        .goog-te-menu-value:hover {
+            background-color: #148f77 !important;
+        }
+        
+        
         
     </style>
-
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
 </head>
 
 <body id="page-top">
@@ -165,10 +187,11 @@
                             id="laws">Login</a></li>
 
                     {% endif %}
+                    <div id="google_translate_element"></div>
 
 
                 </ul>
-            </div>{% google_translate %}
+            </div>
         </div>
     </nav>
     <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel"

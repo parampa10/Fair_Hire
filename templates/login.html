@@ -32,6 +32,9 @@
           font-size: 20px !important;
         }
 
+        #loginbtn{
+          color: black !important;
+        }
 
       }
   </style>
@@ -61,7 +64,7 @@
         {% endif%}  
         <input type="text" name="userid" placeholder="Email Address" class="w-100 my-3 text-light py-2"><br>        
         <input type="password" name="password" placeholder="Password" class="w-100 my-3 text-light py-2"><br>
-        <input type="submit" onclick="xyz()" value="Login" class="w-50 my-3 py-2"><br>
+        <input type="submit" id="loginbtn" onclick="xyz()" value="Login" class="w-50 my-3 py-2"><br>
         <a href="/forgot_password" class="link-dark">Forgot Your Password?</a>  <br><br>
         
         <!-- Dont have an account?<br> <a href="registeruser" style="color: black;">Register here</a> -->

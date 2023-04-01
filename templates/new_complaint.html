@@ -18,6 +18,16 @@
     type="text/css" />
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+  <style>
+    @media (max-width: 450px) {
+            
+            .page-section{
+              margin-top: 0px !important;
+              padding-top: 0px !important;
+            }  
+            
+            }
+  </style>
 </head>
 
 <body id="page-top">
@@ -107,7 +117,7 @@
             <div class="">
               <label for="type_of_disability">Type of Discrimination</label>
               <br>
-              <select name="type_of_disability" >
+              <select name="type_of_disability" class="type_of_disability" >
                 <option value="Age discrimination">Age discrimination</option>
                 <option value="Race discrimination">Race discrimination</option>
                 <option value="Gender discrimination">Gender discrimination</option>
@@ -234,6 +244,7 @@
   <!-- Portfolio Modal 6-->
   <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
+
 {% comment %} 
 (function () {
   'use strict'
@@ -255,7 +266,7 @@
         form.classList.add('was-validated')
       }, false)
     })
-})() {% endcomment %}
+})(){% endcomment %}
   </script>
   <script>
     (function () {

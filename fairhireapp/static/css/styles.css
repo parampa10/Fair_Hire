@@ -12224,3 +12224,63 @@ html {
 .copyright {
   background-color: #1a252f;
 }
+
+ @media (max-width: 450px) {
+            .px-0 {
+            padding-left: 10px !important;
+        }
+        .masthead-heading{
+          font-size: 40px !important;
+        }
+        .w-50{
+         
+          width: 100% !important;
+        }
+
+      }
+
+
+      @media (max-width: 450px) {
+            
+        .container .card{
+         margin-top: 100px !important;
+        }
+
+        /* .chat-bar-collapsible{
+          max-height: 400px !important;
+        } */
+        /* .chat-container{
+          max-height: 300px;
+        } */
+         
+         }
+
+
+         @media (max-width: 450px) {
+                
+          .cardBox .card div{
+           display: flex !important;
+           justify-content: space-around;
+           align-items: center;
+           padding: 0px !important;
+          }  
+          .cardBox .card{
+          height: 70px !important;
+          display: flex !important;
+          padding: 0px !important;
+          margin: 0px !important;
+          }  
+
+          .cardBox {
+              
+          height: 390px !important;
+          
+          }  
+
+          .cardBox .card div{
+          height: auto;
+          }  
+          
+          
+          }
+

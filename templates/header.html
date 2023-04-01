@@ -40,6 +40,9 @@
             border-radius: 10px;
             animation: scale-up 0.5s;
         }
+        .side-link{
+            display: none;;
+        }
 .title-wrapper {
   display: flex;
   flex-direction: column;
@@ -67,6 +70,21 @@
         .menu-clicked ul {
             width: 100%;
         }
+
+        @media (max-width: 450px) {
+            .px-0 {
+            padding-left: 10px !important;
+        }
+        
+        }
+       
+        @media (max-width: 960px) {
+         
+        .side-link{
+            display: block;;
+        }
+        }
+       
         
     </style>
 
@@ -84,8 +102,17 @@
                 <ul class="navbar-nav ms-auto">
 
                     {% if context.role == "Admin" or context.role == "Staff" %}
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="dashboard"
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/dashboard"
                             id="dashboard">Dashboard</a></li>
+                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/statistics"
+                                id="dashboard">Statistics</a></li>
+                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/newuser"
+                                    id="dashboard">Add user</a></li>
+
+                           
+                            
+                           
+                        
 
 
                     {% elif context.role == "chat_staff" %}
@@ -105,10 +132,10 @@
                     </li>
 
 
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="laws"
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/laws"
                             id="laws">Laws &
                             Regulations</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="about"
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/about"
                             id="about">About</a>
 
 

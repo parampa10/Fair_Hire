@@ -176,7 +176,7 @@
         $.get('/get_messages/' + chatRoomId, function (data) {
             var messagesDiv = $('#messages');
             var messages = data.messages;
-
+            messagesDiv.empty(); // clear the messages div
             if (data.current_position != 0 && data.current_position != undefined) {
                 messagesDiv.append('<div class="text-center"><h3><strong> Your current postion in chat is ' + data.current_position + '</strong></h3></div>');
             } else {

@@ -1,3 +1,3 @@
 # Fair_Hire
 
-## LINK: https://fairhire.pythonanywhere.com/
+## LINK: https://fair-hire.vercel.app/
